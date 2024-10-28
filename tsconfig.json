@@ -1,11 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "plugins": [
+      {
+        "name": "typescript-eslint-plugin"
+      }
+    ],
+    "baseUrl": "./",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,6 +27,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "custom.d.ts"
   ]
 }

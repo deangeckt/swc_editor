@@ -1,0 +1,33 @@
+.App {
+  text-align: center;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+align-content: space-between;
+}
+
+.Container {
+  width: 90vw;
+  height: 90vh;
+  box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.1);
+  margin: 0 auto;
+  display: flex;
+  background: url('http://www.ansonika.com/magnifica/img/pattern_1.png');
+  justify-content: center;
+  align-items: center;
+}
+
+.Button {
+text-transform: none !important;
+width: 160px;
+height: 120px;
+}
+
+.Divider {
+  width: 30px;
+  height: auto;
+  display: inline-block;
+}
