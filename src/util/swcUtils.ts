@@ -22,7 +22,7 @@ export function sizeToNeuronRad(s: number) {
 }
 
 export function exportFile(lines: ILine[], neuronRadius: number, rootX: number, rootY: number): BlobPart[] {
-    let res = '# SWC file generated using the editor in: https://deangeckt.github.io/swc_editor/';
+    let res = '# SWC file generated using the editor in: https://deangeckt.github.io/swc_editor/\n';
     res = res.concat(`1 1 0.0 0.0 0.0 ${neuronRadius} -1\n`);
     lines.forEach((line) => {
         const x = pointToLength(line.points[2] - rootX);
