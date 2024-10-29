@@ -112,12 +112,12 @@ export const init_app_state: IAppState = {
     designLines: {
         1: design_init_root_line,
     },
-    selectedId: none_selected_id,
+    selectedId: root_id,
     designLastAddedId: root_id,
 };
 
 const Wrapper = (props: any) => {
-    const [state, setState] = useState<IAppState>(init_app_state);
+    const [state, setState] = useState<IAppState>(JSON.parse(JSON.stringify(init_app_state)));
 
     return <AppContext.Provider value={{ state, setState }}>{props.children}</AppContext.Provider>;
 };

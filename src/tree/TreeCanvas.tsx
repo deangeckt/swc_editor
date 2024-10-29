@@ -75,7 +75,7 @@ const TreeCanvas = () => {
                     <Circle
                         radius={neuronRadToSize(state.designLines[root_id].radius)}
                         fill={state.selectedId === root ? selected_color : neuron_color}
-                        opacity={state.selectedId === root ? 0.8 : 0.3}
+                        opacity={state.selectedId === root ? 0.5 : 0.3}
                         x={state.stage.rootX}
                         y={state.stage.rootY}
                         draggable={false}

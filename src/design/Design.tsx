@@ -3,30 +3,20 @@ import DesignControlPanel from './DesignControlPanel';
 import DesignTopPanel from './DesignTopPanel';
 import TreeCanvas from '../tree/TreeCanvas';
 import TreeNavigation from '../tree/TreeNavigation';
-import { none_selected_id } from '../Wrapper';
+import { none_selected_id, root_id } from '../Wrapper';
 import { AppContext } from '../AppContext';
-import { useMediaQuery } from 'react-responsive';
+import { useDesign } from './useDesign';
 import './Design.css';
 
 const Design = () => {
-    const is_horiz = useMediaQuery({
-        query: '(orientation: landscape)',
-    });
-    const isMobile = useMediaQuery({
-        query: '(max-width: 768px)',
-    });
-
-    const should_turn_screen = (): boolean => {
-        if (window.innerWidth === window.innerHeight) return false;
-        return !is_horiz && isMobile;
-    };
-
+    const { should_turn_screen } = useDesign();
     const { state } = useContext(AppContext);
+    const neuronSelected = state.selectedId === root_id;
+    const lineSelected = state.selectedId !== none_selected_id && state.selectedId !== root_id;
+
     return (
         <div className="Design">
-            <div className="TopPanel">
-                <DesignTopPanel />
-            </div>
+            <DesignTopPanel />
             <div className="MainPanel">
                 {should_turn_screen() ? (
                     <p style={{ fontSize: '1.25em' }}>Please turn the screen horizontally</p>
@@ -36,10 +26,21 @@ const Design = () => {
                             <TreeCanvas />
                         </div>
                         <div className="ControlPanel">
-                            <DesignControlPanel />
-                            <div className="EditPanel">
-                                {state.selectedId !== none_selected_id ? <TreeNavigation /> : null}
-                            </div>
+                            {!neuronSelected && !lineSelected ? (
+                                <p className="emptyHeader">
+                                    Select a line / point to edit it.
+                                    <br></br>
+                                    <br></br>
+                                    <span>To zoom in, use the wheel.</span>
+                                </p>
+                            ) : (
+                                <>
+                                    <DesignControlPanel />
+                                    <div className="EditPanel">
+                                        {state.selectedId !== none_selected_id && <TreeNavigation />}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </>
                 )}

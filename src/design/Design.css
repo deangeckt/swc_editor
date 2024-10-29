@@ -7,23 +7,12 @@
     overflow: hidden;
 }
 
-.TopPanel {
-    display: flex;
-    width: 100%;
-    /* flex-basis: 10%; */
-    min-height: 60px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    border-bottom: 2px solid #efefef;
-}
-
 .MainPanel {
+    background: url('http://www.ansonika.com/magnifica/img/pattern_1.png');
     display: flex;
     width: 100%;
     height: calc(100% - 60px);
     flex-direction: row;
-    background-color: #def7fe;
     justify-content: center;
     align-items: center;
 }
