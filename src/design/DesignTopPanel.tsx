@@ -7,6 +7,7 @@ import { Snackbar, Alert } from '@mui/material';
 import { useDesign } from './useDesign';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
+import logo_img from 'src/logo192.png';
 // import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import './DesignTopPanel.css';
 
@@ -23,7 +24,7 @@ function DesignTopPanel() {
                 </Alert>
             </Snackbar>
             <div className="topPanelTitle">
-                <img className="logo_img" src="logo192.png" alt="Logo" />
+                <img className="logo_img" src={logo_img} alt="Logo" />
                 <h1>Neuron SWC editor</h1>
             </div>
 
