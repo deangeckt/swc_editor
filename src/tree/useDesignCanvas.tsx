@@ -97,6 +97,7 @@ export function useDesignCanvas() {
             length: lengthToPoint(default_length),
             alpha: r.newAngle,
             children: [],
+            z: 0,
         };
         setState({ ...state, designLines: lines, selectedId: newId, designLastAddedId: newId });
     };

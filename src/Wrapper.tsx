@@ -60,6 +60,7 @@ export interface ILine {
     length: number;
     alpha: number;
     children: string[];
+    z: number;
 }
 export interface IAppState {
     stage: IStageSize;
@@ -103,6 +104,7 @@ export const design_init_root_line: ILine = {
     radius: default_neuron_rad,
     length: 0,
     alpha: 0,
+    z: 0, // unused; just to keep the original z data when exporting
 };
 
 export const init_app_state: IAppState = {

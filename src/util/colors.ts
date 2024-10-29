@@ -10,5 +10,6 @@ export const section_color: Dictionary<string> = {
 };
 
 export const neuron_color = '#00000';
+export const selected_color = 'green';
 export const brute_force_main = '#136b00';
 export const border_color = '#efefef';

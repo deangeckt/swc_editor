@@ -28,7 +28,7 @@ function DesignControlPanel() {
     return (
         <>
             {!neuronSelected && !lineSelected ? (
-                <div className="emptyHeader">Select a line / point to edit it</div>
+                <p className="emptyHeader">Select a line / point to edit it</p>
             ) : (
                 <div className="EditPanel">
                     <Button
@@ -42,6 +42,19 @@ function DesignControlPanel() {
                     </Button>
                     {lineSelected ? (
                         <>
+                            <TextField
+                                select
+                                label="Type"
+                                variant="filled"
+                                value={getSelectedType()}
+                                onChange={(e) => updateSimpleField('tid', Number(e.target.value))}
+                            >
+                                {section_types.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
                             <TextField
                                 label={'Length [µM]'}
                                 variant="filled"
@@ -69,19 +82,7 @@ function DesignControlPanel() {
                                 onChange={(e) => updateSimpleField('radius', Number(e.target.value))}
                                 InputProps={{ inputProps: { min: 0, step: 0.1 } }}
                             />
-                            <TextField
-                                select
-                                label="Type"
-                                variant="filled"
-                                value={getSelectedType()}
-                                onChange={(e) => updateSimpleField('tid', Number(e.target.value))}
-                            >
-                                {section_types.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
+
                             <Button
                                 className="NoCapsButton"
                                 variant="outlined"

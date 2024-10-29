@@ -12,7 +12,7 @@ function TreeNavigation() {
     return (
         <>
             <Button
-                className="Button"
+                className="NoCapsButton"
                 variant="outlined"
                 color="primary"
                 startIcon={<NavigateNextIcon />}
@@ -21,7 +21,7 @@ function TreeNavigation() {
                 Select Child
             </Button>
             <Button
-                className="Button"
+                className="NoCapsButton"
                 variant="outlined"
                 color="primary"
                 startIcon={<NavigateBeforeIcon />}
@@ -30,7 +30,7 @@ function TreeNavigation() {
                 Select Parent
             </Button>
             <Button
-                className="Button"
+                className="NoCapsButton"
                 variant="outlined"
                 color="primary"
                 startIcon={<CallSplitIcon />}

@@ -8,11 +8,10 @@
 }
 
 .TopPanel {
-    text-align: center;
     display: flex;
     width: 100%;
-    flex-basis: 10%;
-    min-height: 10%;
+    /* flex-basis: 10%; */
+    min-height: 60px;
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
@@ -22,8 +21,11 @@
 .MainPanel {
     display: flex;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 60px);
     flex-direction: row;
+    background-color: #def7fe;
+    justify-content: center;
+    align-items: center;
 }
 
 .Canvas {
@@ -39,6 +41,9 @@
     display: flex;
     flex-direction: column;
     border-left: 2px solid #efefef;
+    justify-content: space-around;
+    overflow-y: auto;
+    gap: 1em;
 }
 
 .NoCapsButton {

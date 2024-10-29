@@ -27,7 +27,7 @@ export function exportFile(lines: ILine[], neuronRadius: number, rootX: number, 
     lines.forEach((line) => {
         const x = pointToLength(line.points[2] - rootX);
         const y = pointToLength(rootY - line.points[3]);
-        const lineStr = `${line.id} ${line.tid} ${x} ${y} 0.0 ${line.radius} ${line.pid}\n`;
+        const lineStr = `${line.id} ${line.tid} ${x} ${y} ${line.z} ${line.radius} ${line.pid}\n`;
         res = res.concat(lineStr);
     });
     return [res];
@@ -69,6 +69,7 @@ function textLineToILine(
     const tid = Number(fields[1]);
     const x = Number(fields[2]);
     const y = Number(fields[3]);
+    const z = Number(fields[4]);
     const radius = Number(fields[5]);
     const pid = fields[6].replace('\r', '');
 
@@ -86,7 +87,17 @@ function textLineToILine(
     points = [x0, y0, x1, y1];
     const length = Number(Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)).toFixed(2));
     const alpha = convertAlpha(y0, y1, x0, x1);
-    return { id: id, tid: tid, points: points, radius: radius, pid: pid, length: length, alpha: alpha, children: [] };
+    return {
+        id: id,
+        tid: tid,
+        points: points,
+        radius: radius,
+        pid: pid,
+        length: length,
+        alpha: alpha,
+        children: [],
+        z: z,
+    };
 }
 
 export function importFile(text: string, screenRootX: number, screenRootY: number): Partial<IAppState> {
