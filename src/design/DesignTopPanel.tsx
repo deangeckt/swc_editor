@@ -7,13 +7,13 @@ import { Snackbar, Alert } from '@mui/material';
 import { useDesign } from './useDesign';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
+// import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import './DesignTopPanel.css';
 
 function DesignTopPanel() {
     const { state } = useContext(AppContext);
     const { getLinesArrayNoRoot } = useDesignCanvas();
-    const { error, closeErrorBar, uploadSwcFile, restart_designer, should_turn_screen } = useDesign();
+    const { error, closeErrorBar, uploadSwcFile, should_turn_screen } = useDesign();
 
     return (
         <div className="TopPanel">
@@ -22,7 +22,11 @@ function DesignTopPanel() {
                     {error}
                 </Alert>
             </Snackbar>
-            <h1 style={{ paddingLeft: '1em' }}>Neuron SWC editor</h1>
+            <div className="topPanelTitle">
+                <img className="logo_img" src="logo192.png" alt="Logo" />
+                <h1>Neuron SWC editor</h1>
+            </div>
+
             {!should_turn_screen() && (
                 <div className="topPanelButtons">
                     <Button
@@ -46,7 +50,7 @@ function DesignTopPanel() {
                     >
                         Download
                     </Button>
-                    <Button
+                    {/* <Button
                         className="NoCapsButton"
                         variant="text"
                         color="primary"
@@ -55,7 +59,7 @@ function DesignTopPanel() {
                         startIcon={<RestartAltIcon />}
                     >
                         Restart
-                    </Button>
+                    </Button> */}
                 </div>
             )}
         </div>
