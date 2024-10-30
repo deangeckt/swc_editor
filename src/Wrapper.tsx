@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AppContext } from './AppContext';
+import { importFile } from './util/swcUtils';
 
 export interface Dictionary<T> {
     [Key: string]: T;
@@ -62,11 +63,21 @@ export interface ILine {
     children: string[];
     z: number;
 }
+
+export interface IStageCoord {
+    x: number;
+    y: number;
+}
+
 export interface IAppState {
+    file: string;
     stage: IStageSize;
     designLines: Record<string, ILine>;
     designLastAddedId: string;
     selectedId: string;
+    // canvas
+    stageScale: number;
+    stageCoord: IStageCoord;
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -93,31 +104,53 @@ export const default_length = 10; //in micro
 export const default_alpha = 0.1; // in rad [PI]
 export const default_section_value = 0.5;
 
-const init_stage = getStage('Canvas');
+export const example_file = 'H16-06-008-21-02-01_685741524_m_dendriteaxon.swc';
+export const reset_file = 'New.swc';
 
-export const design_init_root_line: ILine = {
-    id: root_id,
-    pid: '-1',
-    points: [-1, -1, init_stage.rootX, init_stage.rootY],
-    children: [],
-    tid: 1,
-    radius: default_neuron_rad,
-    length: 0,
-    alpha: 0,
-    z: 0, // unused; just to keep the original z data when exporting
+export const design_init_root_line = () => {
+    const stage = getStage('Canvas');
+    return {
+        id: root_id,
+        pid: '-1',
+        points: [-1, -1, stage.rootX, stage.rootY],
+        children: [],
+        tid: 1,
+        radius: default_neuron_rad,
+        length: 0,
+        alpha: 0,
+        z: 0, // unused; just to keep the original z data when exporting
+    };
 };
 
-export const init_app_state: IAppState = {
-    stage: init_stage,
+const init_app_state: IAppState = {
+    stage: getStage('Canvas'),
     designLines: {
-        1: design_init_root_line,
+        1: design_init_root_line(),
     },
     selectedId: root_id,
     designLastAddedId: root_id,
+    file: example_file,
+    stageScale: 1,
+    stageCoord: { x: 0, y: 0 },
 };
 
 const Wrapper = (props: any) => {
-    const [state, setState] = useState<IAppState>(JSON.parse(JSON.stringify(init_app_state)));
+    const [state, setState] = useState<IAppState>(init_app_state);
+
+    React.useEffect(() => {
+        const fetchFileContent = async () => {
+            try {
+                const response = await fetch(`${process.env.PUBLIC_URL}/${example_file}`);
+                const text = await response.text();
+                const r = importFile(text as string, state.stage.rootX, state.stage.rootY);
+                setState({ ...state, ...r });
+            } catch (error) {
+                console.error('Error fetching the file:', error);
+            }
+        };
+
+        fetchFileContent();
+    }, []);
 
     return <AppContext.Provider value={{ state, setState }}>{props.children}</AppContext.Provider>;
 };

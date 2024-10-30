@@ -13,5 +13,5 @@ const downloadAux = (blobContent: BlobPart[], type: string, fileName: string) =>
 
 export const downloadSwcFile = (state: IAppState, linesArray: ILine[]) => {
     const content = exportFile(linesArray, state.designLines[root_id].radius, state.stage.rootX, state.stage.rootY);
-    downloadAux(content, 'text/plain;charset=utf-8', 'swcTree.swc');
+    downloadAux(content, 'text/plain;charset=utf-8', state.file);
 };

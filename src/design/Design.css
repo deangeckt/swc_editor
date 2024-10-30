@@ -11,7 +11,7 @@
     background: url('http://www.ansonika.com/magnifica/img/pattern_1.png');
     display: flex;
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 100px);
     flex-direction: row;
     justify-content: center;
     align-items: center;

@@ -5,7 +5,6 @@ import { AppContext } from '../AppContext';
 import { useDesignCanvas } from './useDesignCanvas';
 import { getStage, RenderILine, root_id, root_key } from '../Wrapper';
 import { neuron_color, section_color, selected_color } from '../util/colors';
-import { useTreeCanvasCommon } from './useTreeCanvasCommon';
 
 const TreeCanvas = () => {
     const { state, setState } = useContext(AppContext);
@@ -13,13 +12,7 @@ const TreeCanvas = () => {
     const root = design ? root_id : root_key;
     const { checkDeselect, setSelectedId, getLinesArrayNoRoot } = useDesignCanvas();
     const { updateChildsBelow } = useDesignCanvas();
-    const { handleWheel } = useTreeCanvasCommon();
-
     const widSize = window.document.getElementById('Canvas')?.offsetWidth;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [camera, setCamera] = React.useState({ x: 0, y: 0 });
-    const [stageScale, setStageScale] = React.useState(1);
-    const [stageCoord, setStageCoord] = React.useState({ x: 0, y: 0 });
 
     useEffect(() => {
         if (widSize && widSize !== state.stage.width) {
@@ -33,15 +26,29 @@ const TreeCanvas = () => {
         }
     }, [setState, state, state.designLines, widSize]);
 
-    const handleDragEnd = (e: any) => {
-        setCamera({
-            x: -e.target.x(),
-            y: -e.target.y(),
-        });
-    };
+    // const handleDragEnd = (e: any) => {
+    //     setCamera({
+    //         x: -e.target.x(),
+    //         y: -e.target.y(),
+    //     });
+    // };
 
     const handleWheelLocal = (e: any) => {
-        handleWheel(e, setStageCoord, setStageScale);
+        e.evt.preventDefault();
+        const scaleBy = 1.15;
+        const stage = e.target.getStage();
+        const oldScale = stage.scaleX();
+        const mousePointTo = {
+            x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+            y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+        };
+
+        const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+        const newStageCoord = {
+            x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+            y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
+        };
+        setState({ ...state, stageScale: newScale, stageCoord: newStageCoord });
     };
 
     const onMouseLeave = (e: any) => {
@@ -63,13 +70,13 @@ const TreeCanvas = () => {
                 draggable
                 onMouseDown={checkDeselect}
                 onTouchStart={checkDeselect}
-                onTouchEnd={handleDragEnd}
-                onDragEnd={handleDragEnd}
+                // onTouchEnd={handleDragEnd}
+                // onDragEnd={handleDragEnd}
                 onWheel={handleWheelLocal}
-                scaleX={stageScale}
-                scaleY={stageScale}
-                x={stageCoord.x}
-                y={stageCoord.y}
+                scaleX={state.stageScale}
+                scaleY={state.stageScale}
+                x={state.stageCoord.x}
+                y={state.stageCoord.y}
             >
                 <Layer>
                     <Circle

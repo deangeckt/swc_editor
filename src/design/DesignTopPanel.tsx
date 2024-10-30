@@ -8,13 +8,13 @@ import { useDesign } from './useDesign';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
 import logo_img from 'src/logo192.png';
-// import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import './DesignTopPanel.css';
 
 function DesignTopPanel() {
     const { state } = useContext(AppContext);
     const { getLinesArrayNoRoot } = useDesignCanvas();
-    const { error, closeErrorBar, uploadSwcFile, should_turn_screen } = useDesign();
+    const { error, closeErrorBar, uploadSwcFile, should_turn_screen, restart_designer } = useDesign();
 
     return (
         <div className="TopPanel">
@@ -29,38 +29,41 @@ function DesignTopPanel() {
             </div>
 
             {!should_turn_screen() && (
-                <div className="topPanelButtons">
-                    <Button
-                        className="NoCapsButton"
-                        variant="text"
-                        color="primary"
-                        size="large"
-                        component="label"
-                        startIcon={<UploadIcon />}
-                    >
-                        Upload
-                        <input type="file" accept={'.txt, .swc'} hidden onChange={(e) => uploadSwcFile(e)} />
-                    </Button>
-                    <Button
-                        className="NoCapsButton"
-                        variant="text"
-                        color="primary"
-                        size="large"
-                        onClick={() => downloadSwcFile(state, getLinesArrayNoRoot())}
-                        startIcon={<DownloadIcon />}
-                    >
-                        Download
-                    </Button>
-                    {/* <Button
-                        className="NoCapsButton"
-                        variant="text"
-                        color="primary"
-                        size="large"
-                        onClick={() => restart_designer()}
-                        startIcon={<RestartAltIcon />}
-                    >
-                        Restart
-                    </Button> */}
+                <div className="topPanelSide">
+                    <div>
+                        <Button
+                            className="NoCapsButton"
+                            variant="text"
+                            color="primary"
+                            size="large"
+                            component="label"
+                            startIcon={<UploadIcon />}
+                        >
+                            Upload
+                            <input type="file" accept={'.txt, .swc'} hidden onChange={(e) => uploadSwcFile(e)} />
+                        </Button>
+                        <Button
+                            className="NoCapsButton"
+                            variant="text"
+                            color="primary"
+                            size="large"
+                            onClick={() => downloadSwcFile(state, getLinesArrayNoRoot())}
+                            startIcon={<DownloadIcon />}
+                        >
+                            Download
+                        </Button>
+                        <Button
+                            className="NoCapsButton"
+                            variant="text"
+                            color="primary"
+                            size="large"
+                            onClick={() => restart_designer()}
+                            startIcon={<RestartAltIcon />}
+                        >
+                            Restart
+                        </Button>
+                    </div>
+                    <p style={{ margin: 0 }}>file: {state.file}</p>
                 </div>
             )}
         </div>
