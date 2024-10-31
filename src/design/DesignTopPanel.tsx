@@ -7,7 +7,7 @@ import { Snackbar, Alert } from '@mui/material';
 import { useDesign } from './useDesign';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
-import logo_img from 'src/logo192.png';
+import logo_img from 'src/logo192.webp';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import './DesignTopPanel.css';
 

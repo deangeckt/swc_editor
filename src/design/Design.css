@@ -8,7 +8,7 @@
 }
 
 .MainPanel {
-    background: url('http://www.ansonika.com/magnifica/img/pattern_1.png');
+    background-image: url('src/background.webp');
     display: flex;
     width: 100%;
     height: calc(100% - 100px);
