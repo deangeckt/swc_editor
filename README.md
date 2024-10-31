@@ -7,7 +7,7 @@ It includes: visualize, edit, import and export SWC files in 2D.
 
 The exported files can later be used in simulation software such as [Neuron](https://www.neuron.yale.edu/neuron/).
 
-Morphological files can be foun at: https://neuromorpho.org/.
+Morphological files can be found at: https://neuromorpho.org/.
 
 ### Demo
 In this short video I demonstrate how to upload an SWC file, navigate around using the mouse (zoom via wheel), and remove a branch from the **axon**.
