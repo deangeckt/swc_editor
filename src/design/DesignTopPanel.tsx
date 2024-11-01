@@ -14,7 +14,7 @@ import './DesignTopPanel.css';
 function DesignTopPanel() {
     const { state } = useContext(AppContext);
     const { getLinesArrayNoRoot } = useDesignCanvas();
-    const { error, closeErrorBar, uploadSwcFile, should_turn_screen, restart_designer } = useDesign();
+    const { error, closeErrorBar, uploadSwcFile, should_turn_screen, restart_designer, open_github_page } = useDesign();
 
     return (
         <div className="TopPanel">
@@ -24,8 +24,10 @@ function DesignTopPanel() {
                 </Alert>
             </Snackbar>
             <div className="topPanelTitle">
-                <img className="logo_img" src={logo_img} alt="Logo" />
-                <h1>Neuron SWC editor</h1>
+                <img className="logo_img" src={logo_img} alt="Logo" onClick={() => open_github_page()} />
+                <h1 style={{ cursor: 'pointer' }} onClick={() => open_github_page()}>
+                    Neuron SWC editor
+                </h1>
             </div>
 
             {!should_turn_screen() && (

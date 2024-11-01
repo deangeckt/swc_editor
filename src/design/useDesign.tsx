@@ -64,5 +64,9 @@ export function useDesign() {
         });
     };
 
-    return { should_turn_screen, uploadSwcFile, error, closeErrorBar, restart_designer };
+    const open_github_page = () => {
+        window.open('https://github.com/deangeckt/swc_editor');
+    };
+
+    return { should_turn_screen, uploadSwcFile, error, closeErrorBar, restart_designer, open_github_page };
 }
