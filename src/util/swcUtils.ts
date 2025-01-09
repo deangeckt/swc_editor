@@ -63,7 +63,7 @@ function textLineToILine(
     screenRootY: number,
     rootX: number,
     rootY: number,
-): ILine {
+): ILine | null {
     const fields = lineSplitToFields(line);
     const id = fields[0];
     const tid = Number(fields[1]);
@@ -79,7 +79,10 @@ function textLineToILine(
 
     const father = ilines[pid];
 
-    if (!father) throw new Error('SWC file bad format');
+    if (!father) {
+        console.error('SWC file bad format line: ', line);
+        return null;
+    }
     ilines[pid].children.push(id);
     const x0 = father.points[2];
     const y0 = father.points[3];
@@ -124,7 +127,7 @@ export function importFile(text: string, screenRootX: number, screenRootY: numbe
             }
         } else {
             const iline = textLineToILine(ilines, line, screenRootX, screenRootY, x, y);
-            ilines[iline.id] = iline;
+            if (iline) ilines[iline.id] = iline;
         }
     }
     if (neuronRad === -1) {
