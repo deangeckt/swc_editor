@@ -9,11 +9,12 @@ import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
 import logo_img from 'src/logo192.webp';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import ImageIcon from '@mui/icons-material/Image';
 import './DesignTopPanel.css';
 
 function DesignTopPanel() {
     const { state } = useContext(AppContext);
-    const { getLinesArrayNoRoot } = useDesignCanvas();
+    const { getLinesArrayNoRoot, exportStageToURI } = useDesignCanvas();
     const { error, closeErrorBar, uploadSwcFile, should_turn_screen, restart_designer, open_github_page } = useDesign();
 
     return (
@@ -37,35 +38,45 @@ function DesignTopPanel() {
                             className="NoCapsButton"
                             variant="text"
                             color="primary"
-                            size="large"
+                            size="small"
                             component="label"
                             startIcon={<UploadIcon />}
                         >
-                            Upload
+                            Upload SWC
                             <input type="file" accept={'.txt, .swc'} hidden onChange={(e) => uploadSwcFile(e)} />
                         </Button>
                         <Button
                             className="NoCapsButton"
                             variant="text"
                             color="primary"
-                            size="large"
+                            size="small"
                             onClick={() => downloadSwcFile(state, getLinesArrayNoRoot())}
                             startIcon={<DownloadIcon />}
                         >
-                            Download
+                            Download SWC
                         </Button>
                         <Button
                             className="NoCapsButton"
                             variant="text"
                             color="primary"
-                            size="large"
+                            size="small"
+                            onClick={() => exportStageToURI(state.file)}
+                            startIcon={<ImageIcon />}
+                        >
+                            Download PNG
+                        </Button>
+                        <Button
+                            className="NoCapsButton"
+                            variant="text"
+                            color="primary"
+                            size="small"
                             onClick={() => restart_designer()}
                             startIcon={<RestartAltIcon />}
                         >
                             Restart
                         </Button>
                     </div>
-                    <p style={{ margin: 0 }}>file: {state.file}</p>
+                    <p style={{ margin: 0, fontSize: 13 }}>file: {state.file}</p>
                 </div>
             )}
         </div>

@@ -78,6 +78,7 @@ export interface IAppState {
     // canvas
     stageScale: number;
     stageCoord: IStageCoord;
+    stageRef?: any;
 }
 
 export const getStage = (canvasId: string): IStageSize => {

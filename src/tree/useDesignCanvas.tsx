@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { AppContext } from '../AppContext';
 import { lengthToPoint, pointToLength } from '../util/swcUtils';
 import {
@@ -10,9 +10,12 @@ import {
     none_selected_id,
     root_id,
 } from '../Wrapper';
+import { useSharedStageRef } from './useStageRef';
+import { downloadURI } from 'src/util/exportUtils';
 
 export function useDesignCanvas() {
     const { state, setState } = useContext(AppContext);
+    const { stageRef } = useSharedStageRef();
 
     const getChildren = (id: string): string[] => {
         return state.designLines[id].children;
@@ -177,7 +180,25 @@ export function useDesignCanvas() {
         setState({ ...state, designLines: lines, selectedId: pid });
     };
 
+    const exportStageToURI = useCallback(
+        (filename: string) => {
+            if (!stageRef.current) {
+                console.warn('Stage reference is not available');
+                return;
+            }
+            const uri = stageRef.current.toDataURL({
+                pixelRatio: 3,
+                mimeType: 'image/png',
+                quality: 1,
+            });
+            const pngFileName = filename.replace('.swc', '.png');
+            downloadURI(uri, pngFileName);
+        },
+        [stageRef],
+    );
+
     return {
+        exportStageToURI,
         getLinesArrayNoRoot,
         updateChildsBelow,
         setSelectedId,

@@ -5,13 +5,15 @@ import { AppContext } from '../AppContext';
 import { useDesignCanvas } from './useDesignCanvas';
 import { getStage, RenderILine, root_id, root_key } from '../Wrapper';
 import { neuron_color, section_color, selected_color } from '../util/colors';
+import { useSharedStageRef } from './useStageRef';
 
 const TreeCanvas = () => {
+    const { setStageRef } = useSharedStageRef();
     const { state, setState } = useContext(AppContext);
     const design = true;
     const root = design ? root_id : root_key;
-    const { checkDeselect, setSelectedId, getLinesArrayNoRoot } = useDesignCanvas();
-    const { updateChildsBelow } = useDesignCanvas();
+    const { checkDeselect, setSelectedId, getLinesArrayNoRoot, updateChildsBelow } = useDesignCanvas();
+
     const widSize = window.document.getElementById('Canvas')?.offsetWidth;
 
     useEffect(() => {
@@ -64,6 +66,7 @@ const TreeCanvas = () => {
     return (
         <>
             <Stage
+                ref={setStageRef}
                 pixelRatio={1}
                 width={state.stage.width}
                 height={state.stage.height}
