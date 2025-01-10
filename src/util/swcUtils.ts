@@ -1,4 +1,4 @@
-import { IAppState, ILine, design_init_root_line, root_id } from '../Wrapper';
+import { IAppState, ILine, design_init_root_line } from '../Wrapper';
 
 export const lenPointRatio = 5;
 export const neuronRadiusRatio = 4.5;
@@ -73,23 +73,29 @@ function textLineToILine(
     const radius = Number(fields[5]);
     const pid = fields[6].replace('\r', '');
 
+    // Skip processing if this is the root node
+    if (pid === '-1') {
+        return null;
+    }
+
     let points: number[] = [];
     const x1 = lengthToPoint(x - rootX) + screenRootX;
     const y1 = screenRootY - lengthToPoint(y - rootY);
 
     const father = ilines[pid];
-
     if (!father) {
         console.error('SWC file bad format line: ', line);
         return null;
     }
+
     ilines[pid].children.push(id);
     const x0 = father.points[2];
     const y0 = father.points[3];
-
     points = [x0, y0, x1, y1];
+
     const length = Number(Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)).toFixed(2));
     const alpha = convertAlpha(y0, y1, x0, x1);
+
     return {
         id: id,
         tid: tid,
@@ -105,33 +111,51 @@ function textLineToILine(
 
 export function importFile(text: string, screenRootX: number, screenRootY: number): Partial<IAppState> {
     const ilines: Record<string, ILine> = {};
-    ilines[root_id] = design_init_root_line();
     let neuronRad = -1;
     let x = 0;
     let y = 0;
+    let root_id: string | null = null;
 
     const lines = text.split('\n');
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        if (line.startsWith('#')) continue;
-        if (line === '') continue;
 
-        if (neuronRad === -1) {
-            const fields = lineSplitToFields(line);
-            const id = fields[0];
-            if (id === root_id) {
-                x = Number(fields[2]);
-                y = Number(fields[3]);
-                neuronRad = Number(fields[5]);
-                ilines[root_id].radius = neuronRad;
-            }
+    // First pass: find the root node
+    for (const line of lines) {
+        if (line.startsWith('#') || line === '') continue;
+        const fields = lineSplitToFields(line);
+        if (fields[6].replace('\r', '') === '-1') {
+            root_id = fields[0];
+            break;
+        }
+    }
+
+    if (!root_id) {
+        throw new Error('SWC file bad format - missing root node');
+    }
+
+    // Initialize root line
+    ilines[root_id] = design_init_root_line();
+
+    // Second pass: process all nodes
+    for (const line of lines) {
+        if (line.startsWith('#') || line === '') continue;
+
+        const fields = lineSplitToFields(line);
+        const id = fields[0];
+
+        if (id === root_id) {
+            x = Number(fields[2]);
+            y = Number(fields[3]);
+            neuronRad = Number(fields[5]);
+            ilines[root_id].radius = neuronRad;
         } else {
             const iline = textLineToILine(ilines, line, screenRootX, screenRootY, x, y);
             if (iline) ilines[iline.id] = iline;
         }
     }
+
     if (neuronRad === -1) {
         throw new Error('SWC file bad format - missing neuron line');
     }
+
     return { designLines: ilines, designLastAddedId: lines.length.toString() };
 }
