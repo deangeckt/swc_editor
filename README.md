@@ -3,16 +3,16 @@
 
 This is a free and simple [**online editor**](https://deangeckt.github.io/swc_editor/) for morphological neuron SWC files.
 
-It includes: visualize, edit, import and export SWC files in 2D.
-
+It includes: visualize, edit, import and export SWC files in 2D, and export a transparent PNG image. 
 The exported files can later be used in simulation software such as [Neuron](https://www.neuron.yale.edu/neuron/).
 
 Morphological files can be found at: https://neuromorpho.org/.
 
-### Working with skeletons:
-to export a skeleton from [Meshparty](https://github.com/CAVEconnectome/MeshParty), which can be loaded via [skeleton_plot](https://github.com/AllenInstitute/skeleton_plot/tree/main) run:
 
-Loading a skeleton:
+### Working with skeletons:
+To use a skeleton from [MICrONS](https://www.microns-explorer.org/cortical-mm3), which can be loaded via [skeleton_plot](https://github.com/AllenInstitute/skeleton_plot/tree/main) or [Meshparty](https://github.com/CAVEconnectome/MeshParty) run:
+
+Loading the skeleton:
 ```python
 import skeleton_plot.skel_io as skel_io
 skel_path = "s3://bossdb-open-data/iarpa_microns/minnie/minnie65/skeletons/v661/skeletons/"  
@@ -21,7 +21,7 @@ segment_id = 864691135855890478
 skel_filename = f"{segment_id}_{nucleus_id}.swc"
 sk = skel_io.read_skeleton(skel_path, skel_filename)
 ```
-Exporting to SWC:
+Exporting the skeleton to SWC:
 ```python
 sk.export_to_swc(
     f'{nucleus_id}.swc',
