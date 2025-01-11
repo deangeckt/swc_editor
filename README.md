@@ -16,13 +16,14 @@ Loading the skeleton:
 ```python
 import skeleton_plot.skel_io as skel_io
 skel_path = "s3://bossdb-open-data/iarpa_microns/minnie/minnie65/skeletons/v661/skeletons/"  
-nucleus_id = 189149
-segment_id = 864691135855890478
+nucleus_id = 256609
+segment_id = 864691135404231406
 skel_filename = f"{segment_id}_{nucleus_id}.swc"
 sk = skel_io.read_skeleton(skel_path, skel_filename)
 ```
 Exporting the skeleton to SWC:
 ```python
+import numpy as np
 sk.export_to_swc(
     f'{nucleus_id}.swc',
     node_labels=sk.vertex_properties["compartment"],
