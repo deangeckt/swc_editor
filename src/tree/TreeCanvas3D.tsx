@@ -14,6 +14,7 @@ const TreeCanvas3D = () => {
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const controlsRef = useRef<OrbitControls | null>(null);
     const updateTimeoutRef = useRef<NodeJS.Timeout>();
+    const Z_SCALE = 5; // Scale factor for z-coordinates
 
     const updateScene = useCallback(() => {
         if (!sceneRef.current) return;
@@ -41,15 +42,10 @@ const TreeCanvas3D = () => {
 
         // Render root node
         const rootLine = state.designLines[root_id];
-        console.log('Root node:', {
-            z: rootLine.z,
-            points: rootLine.points,
-            radius: rootLine.radius,
-        });
         const rootGeometry = new THREE.SphereGeometry(rootLine.radius * 2, 32, 32);
         const rootMaterial = new THREE.MeshPhongMaterial({ color: 'red' });
         const rootMesh = new THREE.Mesh(rootGeometry, rootMaterial);
-        rootMesh.position.set(rootLine.points[2], rootLine.points[3], rootLine.z ?? 0);
+        rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * Z_SCALE);
         sceneRef.current.add(rootMesh);
 
         // Render all other lines
@@ -60,15 +56,9 @@ const TreeCanvas3D = () => {
             const parentLine = state.designLines[line.pid];
             if (!parentLine) return;
 
-            console.log(`Line ${line.id}:`, {
-                z: line.z,
-                parentZ: parentLine.z,
-                points: line.points,
-                parentPoints: parentLine.points,
-            });
             const points = [
-                new THREE.Vector3(line.points[0], line.points[1], parentLine.z ?? 0),
-                new THREE.Vector3(line.points[2], line.points[3], line.z ?? 0),
+                new THREE.Vector3(line.points[0], line.points[1], (parentLine.z ?? 0) * Z_SCALE),
+                new THREE.Vector3(line.points[2], line.points[3], (line.z ?? 0) * Z_SCALE),
             ];
 
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -85,13 +75,18 @@ const TreeCanvas3D = () => {
             const box = new THREE.Box3().setFromObject(sceneRef.current);
             const center = box.getCenter(new THREE.Vector3());
             const size = box.getSize(new THREE.Vector3());
-            console.log('Scene bounds:', { center, size });
 
+            // Calculate camera distance based on the largest dimension
             const maxDim = Math.max(size.x, size.y, size.z);
             const fov = cameraRef.current.fov * (Math.PI / 180);
             const cameraZ = Math.abs(maxDim / Math.sin(fov / 2));
 
-            cameraRef.current.position.set(center.x + cameraZ, center.y + cameraZ, center.z + cameraZ);
+            // Position camera at a better angle to see the 3D structure
+            cameraRef.current.position.set(
+                center.x + cameraZ * 0.5,
+                center.y + cameraZ * 0.5,
+                center.z + cameraZ * 0.5,
+            );
             controlsRef.current.target.copy(center);
             controlsRef.current.update();
         }
@@ -116,16 +111,16 @@ const TreeCanvas3D = () => {
         sceneRef.current = scene;
         scene.background = new THREE.Color(0xf0f0f0);
 
-        // Initialize camera
+        // Initialize camera with a wider field of view
         const camera = new THREE.PerspectiveCamera(
-            75,
+            60, // Reduced FOV for less perspective distortion
             containerRef.current.clientWidth / containerRef.current.clientHeight,
-            1, // Increased near plane
-            5000, // Increased far plane to handle large z values
+            1,
+            10000, // Increased far plane
         );
         cameraRef.current = camera;
-        // Position camera at a better initial position based on the model scale
-        camera.position.set(1000, 1000, 1000);
+
+        // Initial camera position will be set by the updateScene function
         camera.lookAt(0, 0, 0);
 
         // Initialize renderer

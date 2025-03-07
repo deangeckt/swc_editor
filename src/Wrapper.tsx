@@ -105,7 +105,7 @@ export const default_length = 10; //in micro
 export const default_alpha = 0.1; // in rad [PI]
 export const default_section_value = 0.5;
 
-export const example_file = 'BC_864691135589911051.swc';
+export const example_file = '23P_864691137198691137.swc';
 export const reset_file = 'New.swc';
 
 export const design_init_root_line = () => {
