@@ -61,7 +61,7 @@ export interface ILine {
     length: number;
     alpha: number;
     children: string[];
-    z: number;
+    z?: number; // Optional z-coordinate
 }
 
 export interface IStageCoord {
@@ -105,7 +105,7 @@ export const default_length = 10; //in micro
 export const default_alpha = 0.1; // in rad [PI]
 export const default_section_value = 0.5;
 
-export const example_file = 'H16-06-008-21-02-01_685741524_m_dendriteaxon.swc';
+export const example_file = 'BC_864691135589911051.swc';
 export const reset_file = 'New.swc';
 
 export const design_init_root_line = () => {
@@ -119,7 +119,7 @@ export const design_init_root_line = () => {
         radius: default_neuron_rad,
         length: 0,
         alpha: 0,
-        z: 0, // unused; just to keep the original z data when exporting
+        z: undefined, // Will be set when loading from SWC
     };
 };
 
