@@ -4,7 +4,20 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { useContext } from 'react';
 import { AppContext } from '../AppContext';
 import { ILine, root_id } from '../Wrapper';
-import { section_color } from '../util/colors';
+
+const parseColor = (color: string) => {
+    if (color.startsWith('rgba')) {
+        const [r, g, b, a] = color.match(/[\d.]+/g) || [];
+        return {
+            color: new THREE.Color(`rgb(${r}, ${g}, ${b})`),
+            opacity: parseFloat(a),
+        };
+    }
+    return {
+        color: new THREE.Color(color),
+        opacity: 1,
+    };
+};
 
 const TreeCanvas3D = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -19,31 +32,33 @@ const TreeCanvas3D = () => {
     const updateScene = useCallback(() => {
         if (!sceneRef.current) return;
 
-        // Clear existing objects but preserve lights
-        const lights = sceneRef.current.children.filter((child) => child instanceof THREE.Light);
-        sceneRef.current.children.forEach((object) => {
+        // Clear ALL existing objects including lights
+        while (sceneRef.current.children.length > 0) {
+            const object = sceneRef.current.children[0];
             if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
                 object.geometry.dispose();
                 if (object.material instanceof THREE.Material) {
                     object.material.dispose();
                 }
-                sceneRef.current?.remove(object);
             }
-        });
-
-        // Add lights back if they were removed
-        if (lights.length === 0) {
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-            sceneRef.current.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
-            directionalLight.position.set(1, 1, 1);
-            sceneRef.current.add(directionalLight);
+            sceneRef.current.remove(object);
         }
+
+        // Add lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+        sceneRef.current.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        directionalLight.position.set(1, 1, 1);
+        sceneRef.current.add(directionalLight);
 
         // Render root node
         const rootLine = state.designLines[root_id];
         const rootGeometry = new THREE.SphereGeometry(rootLine.radius * 2, 32, 32);
-        const rootMaterial = new THREE.MeshPhongMaterial({ color: 'red' });
+        const rootMaterial = new THREE.MeshPhongMaterial({
+            color: 'red',
+            transparent: true,
+            opacity: 0.8,
+        });
         const rootMesh = new THREE.Mesh(rootGeometry, rootMaterial);
         rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * Z_SCALE);
         sceneRef.current.add(rootMesh);
@@ -51,6 +66,9 @@ const TreeCanvas3D = () => {
         // Render all other lines
         Object.values(state.designLines).forEach((line: ILine) => {
             if (line.id === root_id) return;
+
+            // Skip invisible lines immediately
+            if (!state.section3DVisibility[line.tid]) return;
 
             // Get the parent line to access its z-coordinate
             const parentLine = state.designLines[line.pid];
@@ -62,8 +80,9 @@ const TreeCanvas3D = () => {
             ];
 
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const { color } = parseColor(state.sectionColors[line.tid]);
             const material = new THREE.LineBasicMaterial({
-                color: section_color[line.tid],
+                color: color,
                 linewidth: 2,
             });
             const lineMesh = new THREE.Line(geometry, material);
@@ -90,7 +109,12 @@ const TreeCanvas3D = () => {
             controlsRef.current.target.copy(center);
             controlsRef.current.update();
         }
-    }, [state.designLines]);
+
+        // Force a re-render
+        if (rendererRef.current) {
+            rendererRef.current.render(sceneRef.current, cameraRef.current!);
+        }
+    }, [state.designLines, state.sectionColors, state.section3DVisibility]);
 
     // Update scene when state changes
     useEffect(() => {
@@ -101,7 +125,7 @@ const TreeCanvas3D = () => {
 
         // Debounce the update
         updateTimeoutRef.current = setTimeout(updateScene, 50);
-    }, [state.designLines, updateScene]);
+    }, [state.designLines, state.sectionColors, state.section3DVisibility, updateScene]);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -110,6 +134,13 @@ const TreeCanvas3D = () => {
         const scene = new THREE.Scene();
         sceneRef.current = scene;
         scene.background = new THREE.Color(0xf0f0f0);
+
+        // Sort transparent objects
+        scene.traverse((object) => {
+            if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
+                object.renderOrder = object.material.opacity === 0 ? -1 : 0;
+            }
+        });
 
         // Initialize camera with a wider field of view
         const camera = new THREE.PerspectiveCamera(
@@ -124,9 +155,14 @@ const TreeCanvas3D = () => {
         camera.lookAt(0, 0, 0);
 
         // Initialize renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+        });
         rendererRef.current = renderer;
         renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+        renderer.sortObjects = true;
+        renderer.setClearColor(0xf0f0f0, 1);
         containerRef.current.appendChild(renderer.domElement);
 
         // Add orbit controls

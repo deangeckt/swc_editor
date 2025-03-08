@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppContext } from './AppContext';
 import { importFile } from './util/swcUtils';
+import { section_color } from './util/colors';
 
 export interface Dictionary<T> {
     [Key: string]: T;
@@ -79,6 +80,9 @@ export interface IAppState {
     stageScale: number;
     stageCoord: IStageCoord;
     stageRef?: any;
+    is3D: boolean;
+    sectionColors: Dictionary<string>;
+    section3DVisibility: Dictionary<boolean>; // Track visibility in 3D mode
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -133,6 +137,9 @@ const init_app_state: IAppState = {
     file: example_file,
     stageScale: 1,
     stageCoord: { x: 0, y: 0 },
+    is3D: true,
+    sectionColors: { ...section_color },
+    section3DVisibility: Object.keys(section_color).reduce((acc, key) => ({ ...acc, [key]: true }), {}),
 };
 
 const Wrapper = (props: any) => {

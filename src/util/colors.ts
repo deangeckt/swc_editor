@@ -9,6 +9,13 @@ export const section_color: Dictionary<string> = {
     5: '#00000',
 };
 
+export const color_labels: Dictionary<string> = {
+    1: 'soma',
+    2: 'axon',
+    3: 'basal',
+    4: 'apicical',
+};
+
 export const neuron_color = '#00000';
 export const selected_color = 'green';
 export const brute_force_main = '#136b00';

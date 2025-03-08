@@ -4,7 +4,7 @@ import { Stage, Layer, Circle, Line } from 'react-konva';
 import { AppContext } from '../AppContext';
 import { useDesignCanvas } from './useDesignCanvas';
 import { getStage, RenderILine, root_id, root_key } from '../Wrapper';
-import { neuron_color, section_color, selected_color } from '../util/colors';
+import { neuron_color, selected_color, section_color } from '../util/colors';
 import { useSharedStageRef } from './useStageRef';
 
 const TreeCanvas = () => {
@@ -63,6 +63,13 @@ const TreeCanvas = () => {
         container.style.cursor = 'pointer';
     };
 
+    const getLineColor = (tid: number, isSelected: boolean) => {
+        if (isSelected) return selected_color;
+        // Use the user-defined color if available, otherwise fall back to the default section color
+        // If neither exists, use a default color
+        return state.sectionColors[tid] || section_color[tid] || section_color[0];
+    };
+
     return (
         <>
             <Stage
@@ -99,7 +106,7 @@ const TreeCanvas = () => {
                             <Line
                                 key={l.id}
                                 id={l.id}
-                                stroke={state.selectedId === l.id ? selected_color : section_color[l.tid]}
+                                stroke={getLineColor(l.tid, state.selectedId === l.id)}
                                 points={[...l.points]}
                                 perfectDrawEnabled={false}
                                 isSelected={l.id === state.selectedId}
