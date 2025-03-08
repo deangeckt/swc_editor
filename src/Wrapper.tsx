@@ -41,15 +41,6 @@ export const section_types = [
     },
 ];
 
-export const section_short_labels: Dictionary<string> = {
-    0: 'undef',
-    1: 'soma',
-    2: 'axon',
-    3: 'basal',
-    4: 'apic',
-    5: 'custom',
-};
-
 export type RenderILine = Pick<ILine, 'id' | 'pid' | 'points' | 'children' | 'tid' | 'radius'>;
 
 export interface ILine {

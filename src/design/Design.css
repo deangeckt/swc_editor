@@ -20,8 +20,8 @@
 .Canvas {
     display: flex;
     height: 100%;
-    flex-basis: 85%;
-    min-width: 85%;
+    flex-basis: 75%;
+    min-width: 75%;
 }
 
 .ControlPanel {
@@ -30,9 +30,11 @@
     display: flex;
     flex-direction: column;
     border-left: 2px solid #efefef;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     overflow-y: auto;
     gap: 1em;
+    min-width: 25%;
+    overflow-x: hidden;
 }
 
 .NoCapsButton {

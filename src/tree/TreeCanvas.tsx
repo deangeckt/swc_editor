@@ -84,7 +84,7 @@ const TreeCanvas = () => {
                 // onDragEnd={handleDragEnd}
                 onWheel={handleWheelLocal}
                 scaleX={state.stageScale}
-                scaleY={state.stageScale}
+                scaleY={-state.stageScale}
                 x={state.stageCoord.x}
                 y={state.stageCoord.y}
             >
