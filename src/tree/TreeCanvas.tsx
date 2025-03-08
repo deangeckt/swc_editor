@@ -4,7 +4,7 @@ import { Stage, Layer, Circle, Line } from 'react-konva';
 import { AppContext } from '../AppContext';
 import { useDesignCanvas } from './useDesignCanvas';
 import { getStage, RenderILine, root_id, root_key } from '../Wrapper';
-import { neuron_color, selected_color, section_color } from '../util/colors';
+import { selected_color, section_color } from '../util/colors';
 import { useSharedStageRef } from './useStageRef';
 
 const TreeCanvas = () => {
@@ -91,8 +91,8 @@ const TreeCanvas = () => {
                 <Layer>
                     <Circle
                         radius={neuronRadToSize(state.designLines[root_id].radius)}
-                        fill={state.selectedId === root ? selected_color : neuron_color}
-                        opacity={state.selectedId === root ? 0.5 : 0.3}
+                        fill={state.sectionColors['1']}
+                        opacity={state.selectedId === root ? 0.95 : 0.5}
                         x={state.stage.rootX}
                         y={state.stage.rootY}
                         draggable={false}

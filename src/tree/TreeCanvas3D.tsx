@@ -53,15 +53,18 @@ const TreeCanvas3D = () => {
 
         // Render root node
         const rootLine = state.designLines[root_id];
-        const rootGeometry = new THREE.SphereGeometry(rootLine.radius * 2, 32, 32);
-        const rootMaterial = new THREE.MeshPhongMaterial({
-            color: 'red',
-            transparent: true,
-            opacity: 0.8,
-        });
-        const rootMesh = new THREE.Mesh(rootGeometry, rootMaterial);
-        rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * Z_SCALE);
-        sceneRef.current.add(rootMesh);
+        // Skip root node if soma is not visible
+        if (state.section3DVisibility['1']) {
+            const rootGeometry = new THREE.SphereGeometry(rootLine.radius * 2, 32, 32);
+            const rootMaterial = new THREE.MeshPhongMaterial({
+                color: state.sectionColors['1'],
+                transparent: true,
+                opacity: 0.8,
+            });
+            const rootMesh = new THREE.Mesh(rootGeometry, rootMaterial);
+            rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * Z_SCALE);
+            sceneRef.current.add(rootMesh);
+        }
 
         // Render all other lines
         Object.values(state.designLines).forEach((line: ILine) => {
