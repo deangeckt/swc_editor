@@ -61,6 +61,7 @@ export function useDesign() {
             file: reset_file,
             stageScale: 1,
             stageCoord: { x: 0, y: 0 },
+            is3D: false,
         });
     };
 

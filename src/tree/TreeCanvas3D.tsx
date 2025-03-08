@@ -27,7 +27,6 @@ const TreeCanvas3D = () => {
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     const controlsRef = useRef<OrbitControls | null>(null);
     const updateTimeoutRef = useRef<NodeJS.Timeout>();
-    const Z_SCALE = 5; // Scale factor for z-coordinates
 
     const updateScene = useCallback(() => {
         if (!sceneRef.current) return;
@@ -62,7 +61,7 @@ const TreeCanvas3D = () => {
                 opacity: 0.8,
             });
             const rootMesh = new THREE.Mesh(rootGeometry, rootMaterial);
-            rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * Z_SCALE);
+            rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * state.zScale);
             sceneRef.current.add(rootMesh);
         }
 
@@ -78,8 +77,8 @@ const TreeCanvas3D = () => {
             if (!parentLine) return;
 
             const points = [
-                new THREE.Vector3(line.points[0], line.points[1], (parentLine.z ?? 0) * Z_SCALE),
-                new THREE.Vector3(line.points[2], line.points[3], (line.z ?? 0) * Z_SCALE),
+                new THREE.Vector3(line.points[0], line.points[1], (parentLine.z ?? 0) * state.zScale),
+                new THREE.Vector3(line.points[2], line.points[3], (line.z ?? 0) * state.zScale),
             ];
 
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -117,7 +116,7 @@ const TreeCanvas3D = () => {
         if (rendererRef.current) {
             rendererRef.current.render(sceneRef.current, cameraRef.current!);
         }
-    }, [state.designLines, state.sectionColors, state.section3DVisibility]);
+    }, [state.designLines, state.sectionColors, state.section3DVisibility, state.zScale]);
 
     // Update scene when state changes
     useEffect(() => {
@@ -128,7 +127,7 @@ const TreeCanvas3D = () => {
 
         // Debounce the update
         updateTimeoutRef.current = setTimeout(updateScene, 50);
-    }, [state.designLines, state.sectionColors, state.section3DVisibility, updateScene]);
+    }, [state.designLines, state.sectionColors, state.section3DVisibility, state.zScale, updateScene]);
 
     useEffect(() => {
         if (!containerRef.current) return;

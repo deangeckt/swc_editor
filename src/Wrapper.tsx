@@ -83,6 +83,7 @@ export interface IAppState {
     is3D: boolean;
     sectionColors: Dictionary<string>;
     section3DVisibility: Dictionary<boolean>; // Track visibility in 3D mode
+    zScale: number; // Scale factor for z-coordinates in 3D view
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -140,6 +141,7 @@ const init_app_state: IAppState = {
     is3D: true,
     sectionColors: { ...section_color },
     section3DVisibility: Object.keys(section_color).reduce((acc, key) => ({ ...acc, [key]: true }), {}),
+    zScale: 5,
 };
 
 const Wrapper = (props: any) => {

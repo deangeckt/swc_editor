@@ -8,6 +8,7 @@ import { none_selected_id, root_id } from '../Wrapper';
 import { AppContext } from '../AppContext';
 import { useDesign } from './useDesign';
 import ColorControlPanel from './ColorControlPanel';
+import ZScaleControl from './ZScaleControl';
 import './Design.css';
 
 const Design = () => {
@@ -28,6 +29,7 @@ const Design = () => {
                             {state.is3D ? <TreeCanvas3D /> : <TreeCanvas />}
                         </div>
                         <div className="ControlPanel">
+                            {state.is3D && <ZScaleControl />}
                             <ColorControlPanel />
 
                             {!state.is3D && (
