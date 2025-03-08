@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import DesignControlPanel from './DesignControlPanel';
 import DesignTopPanel from './DesignTopPanel';
 import TreeCanvas from '../tree/TreeCanvas';
-import TreeCanvas3D from '../tree/TreeCanvas3D';
+import TreeCanvas3D, { TreeCanvas3DRef } from '../tree/TreeCanvas3D';
 import TreeNavigation from '../tree/TreeNavigation';
 import { none_selected_id, root_id } from '../Wrapper';
 import { AppContext } from '../AppContext';
@@ -16,17 +16,18 @@ const Design = () => {
     const { state } = useContext(AppContext);
     const neuronSelected = state.selectedId === root_id;
     const lineSelected = state.selectedId !== none_selected_id && state.selectedId !== root_id;
+    const canvas3DRef = useRef<TreeCanvas3DRef>(null);
 
     return (
         <div className="Design">
-            <DesignTopPanel />
+            <DesignTopPanel canvas3DRef={canvas3DRef} />
             <div className="MainPanel">
                 {should_turn_screen() ? (
                     <p style={{ fontSize: '1.25em' }}>Please turn the screen horizontally</p>
                 ) : (
                     <>
                         <div className="Canvas" id="Canvas">
-                            {state.is3D ? <TreeCanvas3D /> : <TreeCanvas />}
+                            {state.is3D ? <TreeCanvas3D ref={canvas3DRef} /> : <TreeCanvas />}
                         </div>
                         <div className="ControlPanel">
                             {state.is3D && <ZScaleControl />}

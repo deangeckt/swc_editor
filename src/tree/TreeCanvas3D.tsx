@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { useContext } from 'react';
@@ -19,7 +19,11 @@ const parseColor = (color: string) => {
     };
 };
 
-const TreeCanvas3D = () => {
+export interface TreeCanvas3DRef {
+    captureImage: () => string | null;
+}
+
+const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { state } = useContext(AppContext);
     const sceneRef = useRef<THREE.Scene | null>(null);
@@ -135,7 +139,8 @@ const TreeCanvas3D = () => {
         // Initialize scene
         const scene = new THREE.Scene();
         sceneRef.current = scene;
-        scene.background = new THREE.Color(0xf0f0f0);
+        // Remove background color to allow transparency
+        scene.background = null;
 
         // Sort transparent objects
         scene.traverse((object) => {
@@ -156,15 +161,17 @@ const TreeCanvas3D = () => {
         // Initial camera position will be set by the updateScene function
         camera.lookAt(0, 0, 0);
 
-        // Initialize renderer
+        // Initialize renderer with transparency support
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
+            preserveDrawingBuffer: true, // Required for toDataURL to work correctly
         });
         rendererRef.current = renderer;
         renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
         renderer.sortObjects = true;
-        renderer.setClearColor(0xf0f0f0, 1);
+        // Set clear color with 0 alpha for transparency
+        renderer.setClearColor(0x000000, 0);
         containerRef.current.appendChild(renderer.domElement);
 
         // Add orbit controls
@@ -201,7 +208,48 @@ const TreeCanvas3D = () => {
         };
     }, []);
 
+    // Modify capture function to preserve transparency and capture at higher resolution
+    const captureImage = useCallback(() => {
+        if (!rendererRef.current || !sceneRef.current || !cameraRef.current || !containerRef.current) {
+            console.warn('3D renderer not ready');
+            return null;
+        }
+
+        // Store original sizes
+        const originalWidth = containerRef.current.clientWidth;
+        const originalHeight = containerRef.current.clientHeight;
+
+        // Scale factor for higher resolution (2x)
+        const scaleFactor = 2;
+
+        // Resize renderer to higher resolution
+        rendererRef.current.setSize(originalWidth * scaleFactor, originalHeight * scaleFactor);
+        cameraRef.current.aspect = originalWidth / originalHeight;
+        cameraRef.current.updateProjectionMatrix();
+
+        // Render at higher resolution
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
+
+        // Get the high-res image
+        const uri = rendererRef.current.domElement.toDataURL('image/png');
+
+        // Restore original size
+        rendererRef.current.setSize(originalWidth, originalHeight);
+        cameraRef.current.aspect = originalWidth / originalHeight;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.render(sceneRef.current, cameraRef.current);
+
+        return uri;
+    }, []);
+
+    // Expose the capture function through ref
+    useImperativeHandle(ref, () => ({
+        captureImage,
+    }));
+
     return <div ref={containerRef} style={{ width: '100%', height: '100%' }} />;
-};
+});
+
+TreeCanvas3D.displayName = 'TreeCanvas3D';
 
 export default TreeCanvas3D;

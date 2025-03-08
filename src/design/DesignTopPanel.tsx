@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, RefObject } from 'react';
 import Button from '@mui/material/Button';
 import { AppContext } from '../AppContext';
 import { useDesignCanvas } from '../tree/useDesignCanvas';
 import { downloadSwcFile } from '../util/exportUtils';
+import { downloadURI } from '../util/exportUtils';
 import { Snackbar, Alert } from '@mui/material';
 import { useDesign } from './useDesign';
 import UploadIcon from '@mui/icons-material/Upload';
@@ -12,14 +13,31 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ImageIcon from '@mui/icons-material/Image';
 import ThreeDRotationIcon from '@mui/icons-material/ThreeDRotation';
 import './DesignTopPanel.css';
+import { TreeCanvas3DRef } from '../tree/TreeCanvas3D';
 
-function DesignTopPanel() {
+interface DesignTopPanelProps {
+    canvas3DRef: RefObject<TreeCanvas3DRef>;
+}
+
+function DesignTopPanel({ canvas3DRef }: DesignTopPanelProps) {
     const { state, setState } = useContext(AppContext);
     const { getLinesArrayNoRoot, exportStageToURI } = useDesignCanvas();
     const { error, closeErrorBar, uploadSwcFile, should_turn_screen, restart_designer, open_github_page } = useDesign();
 
     const toggle3DView = () => {
         setState({ ...state, is3D: !state.is3D });
+    };
+
+    const handleExportImage = () => {
+        if (state.is3D) {
+            const uri = canvas3DRef.current?.captureImage();
+            if (uri) {
+                const pngFileName = state.file.replace('.swc', '.png');
+                downloadURI(uri, pngFileName);
+            }
+        } else {
+            exportStageToURI(state.file);
+        }
     };
 
     return (
@@ -65,7 +83,7 @@ function DesignTopPanel() {
                             variant="text"
                             color="primary"
                             size="small"
-                            onClick={() => exportStageToURI(state.file)}
+                            onClick={handleExportImage}
                             startIcon={<ImageIcon />}
                         >
                             Download PNG
