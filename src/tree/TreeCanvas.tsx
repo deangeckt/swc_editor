@@ -4,7 +4,7 @@ import { Stage, Layer, Circle, Line } from 'react-konva';
 import { AppContext } from '../AppContext';
 import { useDesignCanvas } from './useDesignCanvas';
 import { getStage, RenderILine, root_id, root_key } from '../Wrapper';
-import { neuron_color, section_color, selected_color } from '../util/colors';
+import { selected_color, section_color } from '../util/colors';
 import { useSharedStageRef } from './useStageRef';
 
 const TreeCanvas = () => {
@@ -63,6 +63,13 @@ const TreeCanvas = () => {
         container.style.cursor = 'pointer';
     };
 
+    const getLineColor = (tid: number, isSelected: boolean) => {
+        if (isSelected) return selected_color;
+        // Use the user-defined color if available, otherwise fall back to the default section color
+        // If neither exists, use a default color
+        return state.sectionColors[tid] || section_color[tid] || section_color[0];
+    };
+
     return (
         <>
             <Stage
@@ -77,15 +84,15 @@ const TreeCanvas = () => {
                 // onDragEnd={handleDragEnd}
                 onWheel={handleWheelLocal}
                 scaleX={state.stageScale}
-                scaleY={state.stageScale}
+                scaleY={-state.stageScale}
                 x={state.stageCoord.x}
                 y={state.stageCoord.y}
             >
                 <Layer>
                     <Circle
                         radius={neuronRadToSize(state.designLines[root_id].radius)}
-                        fill={state.selectedId === root ? selected_color : neuron_color}
-                        opacity={state.selectedId === root ? 0.5 : 0.3}
+                        fill={state.sectionColors['1']}
+                        opacity={state.selectedId === root ? 0.95 : 0.5}
                         x={state.stage.rootX}
                         y={state.stage.rootY}
                         draggable={false}
@@ -99,7 +106,7 @@ const TreeCanvas = () => {
                             <Line
                                 key={l.id}
                                 id={l.id}
-                                stroke={state.selectedId === l.id ? selected_color : section_color[l.tid]}
+                                stroke={getLineColor(l.tid, state.selectedId === l.id)}
                                 points={[...l.points]}
                                 perfectDrawEnabled={false}
                                 isSelected={l.id === state.selectedId}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppContext } from './AppContext';
 import { importFile } from './util/swcUtils';
+import { section_color } from './util/colors';
 
 export interface Dictionary<T> {
     [Key: string]: T;
@@ -40,15 +41,6 @@ export const section_types = [
     },
 ];
 
-export const section_short_labels: Dictionary<string> = {
-    0: 'undef',
-    1: 'soma',
-    2: 'axon',
-    3: 'basal',
-    4: 'apic',
-    5: 'custom',
-};
-
 export type RenderILine = Pick<ILine, 'id' | 'pid' | 'points' | 'children' | 'tid' | 'radius'>;
 
 export interface ILine {
@@ -61,7 +53,7 @@ export interface ILine {
     length: number;
     alpha: number;
     children: string[];
-    z: number;
+    z?: number; // Optional z-coordinate
 }
 
 export interface IStageCoord {
@@ -79,6 +71,10 @@ export interface IAppState {
     stageScale: number;
     stageCoord: IStageCoord;
     stageRef?: any;
+    is3D: boolean;
+    sectionColors: Dictionary<string>;
+    section3DVisibility: Dictionary<boolean>; // Track visibility in 3D mode
+    zScale: number; // Scale factor for z-coordinates in 3D view
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -105,7 +101,7 @@ export const default_length = 10; //in micro
 export const default_alpha = 0.1; // in rad [PI]
 export const default_section_value = 0.5;
 
-export const example_file = 'H16-06-008-21-02-01_685741524_m_dendriteaxon.swc';
+export const example_file = '23P_864691137198691137.swc';
 export const reset_file = 'New.swc';
 
 export const design_init_root_line = () => {
@@ -119,7 +115,7 @@ export const design_init_root_line = () => {
         radius: default_neuron_rad,
         length: 0,
         alpha: 0,
-        z: 0, // unused; just to keep the original z data when exporting
+        z: undefined, // Will be set when loading from SWC
     };
 };
 
@@ -133,6 +129,10 @@ const init_app_state: IAppState = {
     file: example_file,
     stageScale: 1,
     stageCoord: { x: 0, y: 0 },
+    is3D: true,
+    sectionColors: { ...section_color },
+    section3DVisibility: Object.keys(section_color).reduce((acc, key) => ({ ...acc, [key]: true }), {}),
+    zScale: 5,
 };
 
 const Wrapper = (props: any) => {

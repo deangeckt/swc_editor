@@ -1,0 +1,51 @@
+.ZScaleControl {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.ZScaleControl h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.ZScaleInputs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ZScaleInputs input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+.ZScaleInputs input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #666;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.ZScaleInputs input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #666;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.scale-value {
+    min-width: 40px;
+    font-size: 0.9em;
+    color: #666;
+    font-family: monospace;
+}
