@@ -4,10 +4,16 @@
 
 This is a free and simple [**online editor**](https://deangeckt.github.io/swc_editor/) for morphological neuron SWC files.
 
-It includes: visualize, edit, import and export SWC files in 2D, and export a transparent PNG image.
+It includes: visualize, edit, import and export SWC files in 2D and 3D, and export a transparent PNG image.
 The exported files can later be used in simulation software such as [Neuron](https://www.neuron.yale.edu/neuron/).
 
 Morphological files can be found at: https://neuromorpho.org/.
+
+## Demo
+
+
+https://github.com/user-attachments/assets/30049385-c528-46bb-af4b-6a7990700c2b
+
 
 
 ### Working with skeletons:
@@ -33,9 +39,5 @@ sk.export_to_swc(
 )
 ```
 
-## Demo
-In this short video I demonstrate how to upload an SWC file, navigate around using the mouse (zoom via wheel), and remove a branch from the **axon**.
-
-https://github.com/user-attachments/assets/cc3710d6-cdd3-4cef-995e-28cf200349b9
 
 
