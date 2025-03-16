@@ -22,7 +22,7 @@ interface DesignTopPanelProps {
 function DesignTopPanel({ canvas3DRef }: DesignTopPanelProps) {
     const { state, setState } = useContext(AppContext);
     const { getLinesArrayNoRoot, exportStageToURI } = useDesignCanvas();
-    const { error, closeErrorBar, uploadSwcFile, should_turn_screen, restart_designer, open_github_page } = useDesign();
+    const { error, closeErrorBar, uploadSwcFile, restart_designer, open_github_page } = useDesign();
 
     const toggle3DView = () => {
         setState({ ...state, is3D: !state.is3D });
@@ -54,64 +54,62 @@ function DesignTopPanel({ canvas3DRef }: DesignTopPanelProps) {
                 </h1>
             </div>
 
-            {!should_turn_screen() && (
-                <div className="topPanelSide">
-                    <div>
-                        <Button
-                            className="NoCapsButton"
-                            variant="text"
-                            color="primary"
-                            size="small"
-                            component="label"
-                            startIcon={<UploadIcon />}
-                        >
-                            Upload SWC
-                            <input type="file" accept={'.txt, .swc'} hidden onChange={(e) => uploadSwcFile(e)} />
-                        </Button>
-                        <Button
-                            className="NoCapsButton"
-                            variant="text"
-                            color="primary"
-                            size="small"
-                            onClick={() => downloadSwcFile(state, getLinesArrayNoRoot())}
-                            startIcon={<DownloadIcon />}
-                        >
-                            Download SWC
-                        </Button>
-                        <Button
-                            className="NoCapsButton"
-                            variant="text"
-                            color="primary"
-                            size="small"
-                            onClick={handleExportImage}
-                            startIcon={<ImageIcon />}
-                        >
-                            Download PNG
-                        </Button>
-                        <Button
-                            className="NoCapsButton"
-                            variant="text"
-                            color="primary"
-                            size="small"
-                            onClick={() => restart_designer()}
-                            startIcon={<RestartAltIcon />}
-                        >
-                            Restart
-                        </Button>
-                        <Button
-                            className="NoCapsButton"
-                            variant="text"
-                            color="primary"
-                            size="small"
-                            onClick={toggle3DView}
-                            startIcon={<ThreeDRotationIcon />}
-                        >
-                            Switch to {state.is3D ? '2D' : '3D'}
-                        </Button>
-                    </div>
-                    <p style={{ margin: 0, fontSize: 13 }}>file: {state.file}</p>
+            <div className="topPanelSide">
+                <div className="topPanelButtons">
+                    <Button
+                        className="NoCapsButton"
+                        variant="text"
+                        color="primary"
+                        size="small"
+                        component="label"
+                        startIcon={<UploadIcon />}
+                    >
+                        Upload SWC
+                        <input type="file" accept={'.txt, .swc'} hidden onChange={(e) => uploadSwcFile(e)} />
+                    </Button>
+                    <Button
+                        className="NoCapsButton"
+                        variant="text"
+                        color="primary"
+                        size="small"
+                        onClick={() => downloadSwcFile(state, getLinesArrayNoRoot())}
+                        startIcon={<DownloadIcon />}
+                    >
+                        Download SWC
+                    </Button>
+                    <Button
+                        className="NoCapsButton"
+                        variant="text"
+                        color="primary"
+                        size="small"
+                        onClick={handleExportImage}
+                        startIcon={<ImageIcon />}
+                    >
+                        Download PNG
+                    </Button>
+                    <Button
+                        className="NoCapsButton"
+                        variant="text"
+                        color="primary"
+                        size="small"
+                        onClick={() => restart_designer()}
+                        startIcon={<RestartAltIcon />}
+                    >
+                        Restart
+                    </Button>
+                    <Button
+                        className="NoCapsButton"
+                        variant="text"
+                        color="primary"
+                        size="small"
+                        onClick={toggle3DView}
+                        startIcon={<ThreeDRotationIcon />}
+                    >
+                        Switch to {state.is3D ? '2D' : '3D'}
+                    </Button>
                 </div>
-            )}
+                <p style={{ margin: 0, fontSize: 13 }}>file: {state.file}</p>
+            </div>
         </div>
     );
 }

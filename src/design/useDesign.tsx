@@ -18,7 +18,7 @@ export function useDesign() {
 
     const should_turn_screen = (): boolean => {
         if (window.innerWidth === window.innerHeight) return false;
-        return !is_horiz && isMobile;
+        return !is_horiz && isMobile && !state.is3D;
     };
 
     const closeErrorBar = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {

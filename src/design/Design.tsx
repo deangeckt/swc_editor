@@ -23,7 +23,10 @@ const Design = () => {
             <DesignTopPanel canvas3DRef={canvas3DRef} />
             <div className="MainPanel">
                 {should_turn_screen() ? (
-                    <p style={{ fontSize: '1.25em' }}>Please turn the screen horizontally</p>
+                    <div style={{ fontSize: '1.25em', textAlign: 'center' }}>
+                        <p>Please turn the screen horizontally</p>
+                        <p>Use the 3D view</p>
+                    </div>
                 ) : (
                     <>
                         <div className="Canvas" id="Canvas">

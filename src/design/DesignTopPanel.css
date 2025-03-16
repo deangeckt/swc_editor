@@ -6,6 +6,19 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 2px solid #efefef;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+.topPanelTitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.topPanelTitle h1 {
+    margin: 0;
+    font-size: 1.5rem;
 }
 
 .topPanelSide {
@@ -13,10 +26,81 @@
     flex-direction: column;
     text-align: end;
     padding: 1em;
+    gap: 0.5rem;
 }
 
-.logo_img{
+.topPanelButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.logo_img {
     height: 55px;
     width: 55px;
     cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .TopPanel {
+        flex-direction: column;
+        min-height: auto;
+        padding: 0.5rem;
+        gap: 1rem;
+    }
+
+    .topPanelTitle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .topPanelTitle h1 {
+        font-size: 1.2rem;
+    }
+
+    .logo_img {
+        height: 40px;
+        width: 40px;
+    }
+
+    .topPanelSide {
+        width: 100%;
+        padding: 0;
+        align-items: center;
+    }
+
+    .topPanelButtons {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .TopPanel {
+        padding: 0.3rem;
+        gap: 0.5rem;
+    }
+
+    .topPanelTitle h1 {
+        font-size: 1rem;
+    }
+
+    .logo_img {
+        height: 35px;
+        width: 35px;
+    }
+
+    .NoCapsButton {
+        padding: 0 8px !important;
+        min-width: auto !important;
+    }
+
+    .NoCapsButton .MuiButton-startIcon {
+        margin-right: 4px !important;
+    }
+
+    .topPanelSide p {
+        font-size: 11px !important;
+    }
 }
