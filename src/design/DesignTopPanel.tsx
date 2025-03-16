@@ -4,7 +4,7 @@ import { AppContext } from '../AppContext';
 import { useDesignCanvas } from '../tree/useDesignCanvas';
 import { downloadSwcFile } from '../util/exportUtils';
 import { downloadURI } from '../util/exportUtils';
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert, Tooltip } from '@mui/material';
 import { useDesign } from './useDesign';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -12,6 +12,7 @@ import logo_img from 'src/logo192.webp';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ImageIcon from '@mui/icons-material/Image';
 import ThreeDRotationIcon from '@mui/icons-material/ThreeDRotation';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import './DesignTopPanel.css';
 import { TreeCanvas3DRef } from '../tree/TreeCanvas3D';
 
@@ -48,10 +49,26 @@ function DesignTopPanel({ canvas3DRef }: DesignTopPanelProps) {
                 </Alert>
             </Snackbar>
             <div className="topPanelTitle">
-                <img className="logo_img" src={logo_img} alt="Logo" onClick={() => open_github_page()} />
-                <h1 style={{ cursor: 'pointer' }} onClick={() => open_github_page()}>
-                    Neuron SWC editor
-                </h1>
+                <Tooltip title="Visit project on GitHub">
+                    <img
+                        className="logo_img"
+                        src={logo_img}
+                        alt="Logo"
+                        onClick={() => open_github_page()}
+                        style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                        onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                        onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                    />
+                </Tooltip>
+                <Tooltip title="Visit project on GitHub">
+                    <div
+                        style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                        onClick={() => open_github_page()}
+                    >
+                        <h1 style={{ marginRight: '8px' }}>Neuron SWC editor</h1>
+                        <GitHubIcon style={{ fontSize: '24px', color: '#555' }} />
+                    </div>
+                </Tooltip>
             </div>
 
             <div className="topPanelSide">
