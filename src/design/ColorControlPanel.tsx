@@ -91,7 +91,7 @@ const ColorControlPanel = () => {
                                             checked={state.section3DVisibility[id]}
                                             onChange={(e) => handleVisibilityChange(id, e.target.checked)}
                                         />
-                                        <span>Visible</span>
+                                        <span className="slider"></span>
                                     </label>
                                 ) : (
                                     <>

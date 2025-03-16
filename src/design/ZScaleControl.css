@@ -13,6 +13,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    width: 100%;
 }
 
 .ZScaleInputs input[type="range"] {
@@ -23,6 +24,7 @@
     background: #ddd;
     border-radius: 5px;
     outline: none;
+    min-width: 100px;
 }
 
 .ZScaleInputs input[type="range"]::-webkit-slider-thumb {
@@ -45,7 +47,48 @@
 
 .scale-value {
     min-width: 40px;
-    font-size: 0.9em;
+    font-size: 1.2em;
     color: #666;
     font-family: monospace;
+    text-align: right;
+}
+
+/* Media Queries */
+@media screen and (max-width: 480px) {
+    .ZScaleControl {
+        padding: 0.5rem;
+    }
+
+    .ZScaleControl h3 {
+        font-size: 1rem;
+        margin: 0 0 0.75rem 0;
+    }
+
+    .ZScaleInputs {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .ZScaleInputs input[type="range"] {
+        height: 4px;
+        width: 100%;
+        min-width: unset;
+    }
+
+    .scale-value {
+        min-width: unset;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .ZScaleInputs input[type="range"]::-webkit-slider-thumb {
+        width: 12px;
+        height: 12px;
+    }
+
+    .ZScaleInputs input[type="range"]::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+    }
 }
