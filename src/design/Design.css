@@ -40,3 +40,20 @@
 .NoCapsButton {
     text-transform: none !important;
 }
+
+.explore-neurons-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.explore-neurons-btn:hover {
+    background-color: #357abd;
+}

@@ -102,7 +102,12 @@ export const default_alpha = 0.1; // in rad [PI]
 export const default_section_value = 0.5;
 
 export const example_file = '23P_864691137198691137.swc';
+export const example_file_2 = '5P-ET_864691135163324717.swc';
+export const example_file_3 = 'BC_864691135341342405.swc';
 export const reset_file = 'New.swc';
+
+export const neuron_files = [example_file, example_file_2, example_file_3];
+export const neuron_files_display_name = ['MICrONS 23P', 'MICrONS 5P-ET', 'MICrONS Basket'];
 
 export const design_init_root_line = () => {
     const stage = getStage('Canvas');
