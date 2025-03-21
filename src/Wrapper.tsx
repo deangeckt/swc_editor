@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AppContext } from './AppContext';
 import { importFile } from './util/swcUtils';
 import { section_color } from './util/colors';
+import { example_file } from './neuron_file';
 
 export interface Dictionary<T> {
     [Key: string]: T;
@@ -101,13 +102,8 @@ export const default_length = 10; //in micro
 export const default_alpha = 0.1; // in rad [PI]
 export const default_section_value = 0.5;
 
-export const example_file = '23P_864691137198691137.swc';
-export const example_file_2 = '5P-ET_864691135163324717.swc';
-export const example_file_3 = 'BC_864691135341342405.swc';
+export const example_human_file1 = 'H16-06-008-21-02-01_685741524_m_dendriteaxon.swc';
 export const reset_file = 'New.swc';
-
-export const neuron_files = [example_file, example_file_2, example_file_3];
-export const neuron_files_display_name = ['MICrONS 23P', 'MICrONS 5P-ET', 'MICrONS Basket'];
 
 export const design_init_root_line = () => {
     const stage = getStage('Canvas');
