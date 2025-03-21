@@ -81,8 +81,16 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
             if (!parentLine) return;
 
             const points = [
-                new THREE.Vector3(line.points[0], line.points[1], (parentLine.z ?? 0) * state.zScale),
-                new THREE.Vector3(line.points[2], line.points[3], (line.z ?? 0) * state.zScale),
+                new THREE.Vector3(
+                    line.points[0],
+                    state.yAxisInverted ? line.points[1] : -line.points[1],
+                    (parentLine.z ?? 0) * state.zScale,
+                ),
+                new THREE.Vector3(
+                    line.points[2],
+                    state.yAxisInverted ? line.points[3] : -line.points[3],
+                    (line.z ?? 0) * state.zScale,
+                ),
             ];
 
             const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -120,7 +128,7 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
         if (rendererRef.current) {
             rendererRef.current.render(sceneRef.current, cameraRef.current!);
         }
-    }, [state.designLines, state.sectionColors, state.section3DVisibility, state.zScale]);
+    }, [state.designLines, state.sectionColors, state.section3DVisibility, state.zScale, state.yAxisInverted]);
 
     // Update scene when state changes
     useEffect(() => {
@@ -131,7 +139,14 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
 
         // Debounce the update
         updateTimeoutRef.current = setTimeout(updateScene, 50);
-    }, [state.designLines, state.sectionColors, state.section3DVisibility, state.zScale, updateScene]);
+    }, [
+        state.designLines,
+        state.sectionColors,
+        state.section3DVisibility,
+        state.zScale,
+        state.yAxisInverted,
+        updateScene,
+    ]);
 
     useEffect(() => {
         if (!containerRef.current) return;

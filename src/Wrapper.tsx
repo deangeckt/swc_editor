@@ -76,6 +76,7 @@ export interface IAppState {
     sectionColors: Dictionary<string>;
     section3DVisibility: Dictionary<boolean>; // Track visibility in 3D mode
     zScale: number; // Scale factor for z-coordinates in 3D view
+    yAxisInverted: boolean; // Controls whether Y axis is inverted
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -134,6 +135,7 @@ const init_app_state: IAppState = {
     sectionColors: { ...section_color },
     section3DVisibility: Object.keys(section_color).reduce((acc, key) => ({ ...acc, [key]: true }), {}),
     zScale: 5,
+    yAxisInverted: true,
 };
 
 const Wrapper = (props: any) => {

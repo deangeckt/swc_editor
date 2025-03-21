@@ -42,7 +42,7 @@ export const neuron_files: NeuronFile[] = [
         link: 'https://neuromorpho.org/neuron_info.jsp?neuron_name=576110753_transformed',
     },
     {
-        file_path: '758319694_transformed',
+        file_path: '758319694_transformed.swc',
         display_name: 'Excitatory L2 Pyramidal',
         description: 'Intratelencephalic (IT), neocortex',
         species: 'Human',

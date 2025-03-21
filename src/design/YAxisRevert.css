@@ -1,0 +1,87 @@
+.YAxisRevert {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    gap: 0.5rem;
+}
+
+.YAxisRevert h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.y-axis-toggle {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    margin: 0;
+}
+
+.y-axis-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+
+.y-axis-toggle .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .3s;
+    border-radius: 24px;
+}
+
+.y-axis-toggle .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+.y-axis-toggle input:checked+.slider {
+    background-color: #2196F3;
+}
+
+.y-axis-toggle input:checked+.slider:before {
+    transform: translateX(22px);
+}
+
+@media screen and (max-width: 480px) {
+    .YAxisRevert {
+        padding: 0.5rem;
+    }
+
+    .YAxisRevert h3 {
+        font-size: 1rem;
+    }
+
+    .y-axis-toggle {
+        width: 32px;
+        height: 18px;
+    }
+
+    .y-axis-toggle .slider:before {
+        height: 14px;
+        width: 14px;
+        left: 2px;
+        bottom: 2px;
+    }
+
+    .y-axis-toggle input:checked+.slider:before {
+        transform: translateX(14px);
+    }
+}

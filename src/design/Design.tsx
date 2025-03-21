@@ -10,6 +10,7 @@ import { useDesign } from './useDesign';
 import ColorControlPanel from './ColorControlPanel';
 import ZScaleControl from './ZScaleControl';
 import NeuronExplorer from './NeuronExplorer';
+import YAxisRevert from './YAxisRevert';
 import './Design.css';
 
 const Design = () => {
@@ -45,6 +46,7 @@ const Design = () => {
                                 <NeuronExplorer />
                             ) : (
                                 <>
+                                    <YAxisRevert />
                                     {state.is3D && <ZScaleControl />}
                                     <ColorControlPanel />
 
