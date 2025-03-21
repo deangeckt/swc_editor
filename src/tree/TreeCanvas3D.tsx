@@ -65,7 +65,11 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
                 opacity: 0.8,
             });
             const rootMesh = new THREE.Mesh(rootGeometry, rootMaterial);
-            rootMesh.position.set(rootLine.points[2], rootLine.points[3], (rootLine.z ?? 0) * state.zScale);
+            rootMesh.position.set(
+                rootLine.points[2],
+                state.yAxisInverted ? rootLine.points[3] : -rootLine.points[3],
+                (rootLine.z ?? 0) * state.zScale,
+            );
             sceneRef.current.add(rootMesh);
         }
 
