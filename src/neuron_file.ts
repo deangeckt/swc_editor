@@ -3,7 +3,7 @@ export interface NeuronFile {
     display_name: string;
     description: string;
     species: string;
-    link?: string;
+    link: string;
 }
 
 export const example_file = '23P_864691137198691137.swc';
@@ -14,18 +14,21 @@ export const neuron_files: NeuronFile[] = [
         display_name: 'Excitatory L2/3 Pyramidal',
         description: 'Layer 2/3 Pyramidal neuron from MICrONS dataset',
         species: 'Mouse',
+        link: 'https://www.microns-explorer.org/cortical-mm3#skeletons',
     },
     {
         file_path: '5P-ET_864691135163324717.swc',
         display_name: 'Excitatory L5P-ET',
         description: 'Layer 5 Pyramidal neuron from MICrONS dataset',
         species: 'Mouse',
+        link: 'https://www.microns-explorer.org/cortical-mm3#skeletons',
     },
     {
         file_path: 'BC_864691135341342405.swc',
         display_name: 'Inhibitory Basket',
         description: 'Basket cell from MICrONS dataset',
         species: 'Mouse',
+        link: 'https://www.microns-explorer.org/cortical-mm3#skeletons',
     },
     {
         file_path: 'H16-06-008-21-02-01_685741524_m_dendriteaxon.swc',

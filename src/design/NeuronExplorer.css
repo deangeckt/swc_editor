@@ -82,9 +82,6 @@
 .neuron-name {
     font-size: 1rem;
     font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .neuron-description {
@@ -137,11 +134,11 @@
     }
 
     .species-icon {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
 
     .species-name {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .neuron-list {
@@ -157,12 +154,12 @@
     }
 
     .neuron-name {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         line-height: 1.2;
     }
 
     .neuron-description {
-        font-size: 0.75rem;
+        font-size: 0.6rem;
         line-height: 1.3;
     }
 
