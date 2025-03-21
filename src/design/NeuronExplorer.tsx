@@ -9,7 +9,7 @@ const getSpeciesIcon = (species: string) => {
         case 'mouse':
             return '🐭';
         case 'human':
-            return '👤';
+            return '👨‍👩';
         default:
             return '🧬';
     }
