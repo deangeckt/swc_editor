@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SearchByNameId from './SearchByNameId';
-import ExploreBySpecies from './ExploreBySpecies';
-import '../NeuroMorphExplorer.css';
+import SearchBySpecies from './SearchBySpecies';
+import './NeuroMorphExplorer.css';
 import './neuromorph.css';
 
 type ExplorerMode = 'search' | 'explore';
@@ -47,9 +47,7 @@ const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack }) => {
             </div>
 
             {/* Content based on selected mode */}
-            <div className="explorer-content">{mode === 'search' ? <SearchByNameId /> : <ExploreBySpecies />}</div>
-
-            {/* Global loading overlay is handled by the subcomponents */}
+            <div className="explorer-content">{mode === 'search' ? <SearchByNameId /> : <SearchBySpecies />}</div>
         </div>
     );
 };

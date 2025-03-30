@@ -3,7 +3,8 @@ import { AppContext } from '../AppContext';
 import { getNeuronsBySpecies } from '../neuron_file';
 import { importFile } from '../util/swcUtils';
 import NeuronButton from './neuromorph/NeuronButton';
-import './NeuronExplorer.css';
+import './NeuronLocalExplorer.css';
+import './neuromorph/neuromorph.css';
 
 const getSpeciesIcon = (species: string) => {
     switch (species.toLowerCase()) {
@@ -20,7 +21,7 @@ interface NeuronExplorerProps {
     onBack: () => void;
 }
 
-const NeuronExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
+const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
     const { state, setState } = useContext(AppContext);
     const neuronsBySpecies = getNeuronsBySpecies();
     const [loadingNeuronId, setLoadingNeuronId] = useState<string | null>(null);
@@ -55,7 +56,7 @@ const NeuronExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
     };
 
     return (
-        <div className="NeuronExplorer">
+        <div className="NeuronLocalExplorer">
             <div className="explorer-header">
                 <button className="back-button" onClick={onBack}>
                     ← Back to Editor
@@ -99,4 +100,4 @@ const NeuronExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
     );
 };
 
-export default NeuronExplorer;
+export default NeuronLocalExplorer;

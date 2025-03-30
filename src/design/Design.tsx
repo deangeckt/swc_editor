@@ -9,10 +9,10 @@ import { AppContext } from '../AppContext';
 import { useDesign } from './useDesign';
 import ColorControlPanel from './ColorControlPanel';
 import ZScaleControl from './ZScaleControl';
-import NeuronExplorer from './NeuronExplorer';
 import NeuroMorphExplorer from './neuromorph/NeuroMorphExplorer';
 import YAxisRevert from './YAxisRevert';
 import './Design.css';
+import NeuronLocalExplorer from './NeuronLocalExplorer';
 
 type ViewMode = 'editor' | 'local' | 'neuromorph';
 
@@ -79,8 +79,7 @@ const Design = () => {
                                 </>
                             )}
 
-                            {viewMode === 'local' && <NeuronExplorer onBack={handleBackToEditor} />}
-
+                            {viewMode === 'local' && <NeuronLocalExplorer onBack={handleBackToEditor} />}
                             {viewMode === 'neuromorph' && <NeuroMorphExplorer onBack={handleBackToEditor} />}
                         </div>
                     </>

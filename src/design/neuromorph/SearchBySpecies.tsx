@@ -4,7 +4,7 @@ import { importFile } from '../../util/swcUtils';
 import { API_BASE_URL, NeuronApiResponse, cleanSWCData } from './neuronUtils';
 import NeuronButton from './NeuronButton';
 
-const ExploreBySpecies: React.FC = () => {
+const SearchBySpecies: React.FC = () => {
     const { state, setState } = useContext(AppContext);
 
     // Species state
@@ -202,4 +202,4 @@ const ExploreBySpecies: React.FC = () => {
     );
 };
 
-export default ExploreBySpecies;
+export default SearchBySpecies;
