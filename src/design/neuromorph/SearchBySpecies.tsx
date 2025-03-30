@@ -13,6 +13,7 @@ const SearchBySpecies: React.FC = () => {
     const [isLoadingSpecies, setIsLoadingSpecies] = useState<boolean>(false);
     const [isLoadingSWC, setIsLoadingSWC] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [searchInitiated, setSearchInitiated] = useState<boolean>(false);
 
     // Results state
     const [exampleNeurons, setExampleNeurons] = useState<NeuronApiResponse[]>([]);
@@ -20,23 +21,8 @@ const SearchBySpecies: React.FC = () => {
     const [totalPages, setTotalPages] = useState<number>(0);
     const [selectedNeuronId, setSelectedNeuronId] = useState<number | null>(null);
 
-    // Try to restore previously selected species from localStorage
-    useEffect(() => {
-        const savedSpecies = localStorage.getItem('neuromorph_active_species');
-        if (savedSpecies) {
-            setActiveSpecies(savedSpecies);
-        }
-    }, []);
-
-    // Save active species to localStorage
-    useEffect(() => {
-        if (activeSpecies) {
-            localStorage.setItem('neuromorph_active_species', activeSpecies);
-            fetchNeuronsBySpecies(activeSpecies);
-        }
-    }, [activeSpecies]);
-
-    // Fetch available species when component mounts
+    // We no longer auto-load from localStorage
+    // Only fetch available species when component mounts
     useEffect(() => {
         const fetchAvailableSpecies = async () => {
             try {
@@ -61,6 +47,25 @@ const SearchBySpecies: React.FC = () => {
         fetchAvailableSpecies();
     }, []);
 
+    // Explicitly call this function only when a user clicks a species
+    const handleSpeciesSelection = (species: string) => {
+        // Clear any existing state
+        setExampleNeurons([]);
+        setSelectedNeuronId(null);
+        setError(null);
+        setCurrentPage(0);
+        setTotalPages(0);
+
+        // Set the new active species
+        setActiveSpecies(species);
+
+        // Mark that a search has been initiated
+        setSearchInitiated(true);
+
+        // Fetch neurons for the selected species
+        fetchNeuronsBySpecies(species);
+    };
+
     // Fetch neurons by species from the API - limit to just a few examples
     const fetchNeuronsBySpecies = async (species: string, page: number = 0, limit: number = 5) => {
         if (!species) return;
@@ -69,23 +74,108 @@ const SearchBySpecies: React.FC = () => {
         setError(null);
 
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/neuron?page=${page}&size=${limit}&sort=neuron_name,asc&q=species:${species}`,
-            );
+            // From the API docs, use the 'q' parameter with specific format:
+            // http://cng.gmu.edu:8080/api/neuron?q=species:human
+            const url = `${API_BASE_URL}/neuron?page=${page}&size=${limit}&sort=neuron_name,asc&q=species:"${encodeURIComponent(species)}"`;
+            console.log('Fetching neurons with URL:', url);
+
+            const response = await fetch(url);
 
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
 
             const data = await response.json();
-            setExampleNeurons(data._embedded.neuronResources);
-            setTotalPages(data.page.totalPages);
-            setCurrentPage(data.page.number);
+            console.log('API Response:', data);
+
+            if (!data._embedded || !data._embedded.neuronResources) {
+                setExampleNeurons([]);
+                setError('No neurons found in the API response');
+                return;
+            }
+
+            // Verify the results are for the correct species
+            const resultsSpecies = data._embedded.neuronResources[0]?.species;
+            console.log(`API returned results with species: ${resultsSpecies}`);
+
+            // Double-check the response to ensure we're displaying only the requested species
+            const filteredNeurons = data._embedded.neuronResources.filter(
+                (neuron: NeuronApiResponse) => neuron.species.toLowerCase() === species.toLowerCase(),
+            );
+
+            console.log(`Found ${filteredNeurons.length} neurons for species: ${species}`);
+
+            // If there are any neurons that match exactly, use those
+            if (filteredNeurons.length > 0) {
+                setExampleNeurons(filteredNeurons);
+                setTotalPages(Math.ceil(filteredNeurons.length / limit));
+                setCurrentPage(page);
+            } else {
+                // Try one more approach if needed
+                await tryAlternativeQuery(species, page, limit);
+            }
         } catch (err) {
             setError('Failed to fetch neurons. Please try again.');
             console.error('Error fetching neurons:', err);
+            // Try the alternative query if the first one fails
+            await tryAlternativeQuery(species, page, limit);
         } finally {
             setIsLoadingSpecies(false);
+        }
+    };
+
+    // Try an alternative query approach if the first one doesn't work
+    const tryAlternativeQuery = async (species: string, page: number = 0, limit: number = 10) => {
+        try {
+            // Try a more direct search approach
+            // This URL format comes from examining the API's documentation for "Select query"
+            const url = `${API_BASE_URL}/neuron/select?q=species:${encodeURIComponent(species)}&page=${page}&size=${limit}`;
+            console.log('Trying alternative query URL:', url);
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Alternative API Response:', data);
+
+            if (!data._embedded || !data._embedded.neuronResources || data._embedded.neuronResources.length === 0) {
+                setExampleNeurons([]);
+                setError(`No neurons found for species: ${species}. The database may not have ${species} neurons.`);
+                return;
+            }
+
+            // Check if any results match our search
+            const matchingNeurons = data._embedded.neuronResources.filter(
+                (neuron: NeuronApiResponse) =>
+                    neuron.species.toLowerCase() === species.toLowerCase() ||
+                    neuron.species.toLowerCase().includes(species.toLowerCase()) ||
+                    species.toLowerCase().includes(neuron.species.toLowerCase()),
+            );
+
+            if (matchingNeurons.length > 0) {
+                console.log(`Found ${matchingNeurons.length} neurons with alternative query`);
+                setExampleNeurons(matchingNeurons);
+                setTotalPages(Math.ceil(matchingNeurons.length / limit));
+                setCurrentPage(page);
+            } else {
+                // If we still get results but they don't match our species, show a more informative error
+                const firstNeuron = data._embedded.neuronResources[0];
+                if (firstNeuron) {
+                    console.log(`Warning: Requested '${species}' but API returned '${firstNeuron.species}'`);
+                    setError(
+                        `Note: The API returned ${firstNeuron.species} neurons when searching for ${species}. The database might not have ${species} neurons available.`,
+                    );
+                } else {
+                    setExampleNeurons([]);
+                    setError(`No neurons found for species: ${species}. Please try another search.`);
+                }
+            }
+        } catch (err) {
+            console.error('Error in alternative query:', err);
+            setError(`No neurons found for species: ${species}. Please try another search.`);
         }
     };
 
@@ -150,7 +240,7 @@ const SearchBySpecies: React.FC = () => {
                     <button
                         key={`species-${species}`}
                         className={`species-button ${activeSpecies === species ? 'active' : ''}`}
-                        onClick={() => setActiveSpecies(species)}
+                        onClick={() => handleSpeciesSelection(species)}
                     >
                         {species}
                     </button>
@@ -159,9 +249,9 @@ const SearchBySpecies: React.FC = () => {
 
             {error && <div className="error-message">{error}</div>}
 
-            {isLoadingSpecies && !exampleNeurons.length && <div className="loading-indicator">Loading species...</div>}
+            {isLoadingSpecies && <div className="loading-indicator">Loading neurons...</div>}
 
-            {activeSpecies && exampleNeurons.length > 0 && (
+            {searchInitiated && activeSpecies && exampleNeurons.length > 0 && (
                 <div className="species-results">
                     <h3>Example Neurons ({activeSpecies})</h3>
                     <div className="neuron-list">
@@ -196,6 +286,13 @@ const SearchBySpecies: React.FC = () => {
                             </button>
                         </div>
                     )}
+                </div>
+            )}
+
+            {searchInitiated && activeSpecies && exampleNeurons.length === 0 && !isLoadingSpecies && (
+                <div className="no-results">
+                    <p>No neurons found for species: {activeSpecies}</p>
+                    <p>Try selecting a different species or check back later.</p>
                 </div>
             )}
         </div>
