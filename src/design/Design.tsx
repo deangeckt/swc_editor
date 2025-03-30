@@ -10,8 +10,11 @@ import { useDesign } from './useDesign';
 import ColorControlPanel from './ColorControlPanel';
 import ZScaleControl from './ZScaleControl';
 import NeuronExplorer from './NeuronExplorer';
+import NeuroMorphExplorer from './neuromorph/NeuroMorphExplorer';
 import YAxisRevert from './YAxisRevert';
 import './Design.css';
+
+type ViewMode = 'editor' | 'local' | 'neuromorph';
 
 const Design = () => {
     const { should_turn_screen } = useDesign();
@@ -19,7 +22,11 @@ const Design = () => {
     const neuronSelected = state.selectedId === root_id;
     const lineSelected = state.selectedId !== none_selected_id && state.selectedId !== root_id;
     const canvas3DRef = useRef<TreeCanvas3DRef>(null);
-    const [showNeuronExplorer, setShowNeuronExplorer] = useState(false);
+    const [viewMode, setViewMode] = useState<ViewMode>('editor');
+
+    const handleBackToEditor = () => {
+        setViewMode('editor');
+    };
 
     return (
         <div className="Design">
@@ -36,16 +43,16 @@ const Design = () => {
                             {state.is3D ? <TreeCanvas3D ref={canvas3DRef} /> : <TreeCanvas />}
                         </div>
                         <div className="ControlPanel">
-                            <button
-                                className="explore-neurons-btn"
-                                onClick={() => setShowNeuronExplorer(!showNeuronExplorer)}
-                            >
-                                {showNeuronExplorer ? 'Back' : 'Explore more neurons'}
-                            </button>
-                            {showNeuronExplorer ? (
-                                <NeuronExplorer />
-                            ) : (
+                            {viewMode === 'editor' && (
                                 <>
+                                    <div className="view-controls">
+                                        <button className="view-button" onClick={() => setViewMode('local')}>
+                                            Browse Local Neurons
+                                        </button>
+                                        <button className="view-button" onClick={() => setViewMode('neuromorph')}>
+                                            Browse NeuroMorpho.org
+                                        </button>
+                                    </div>
                                     <YAxisRevert />
                                     {state.is3D && <ZScaleControl />}
                                     <ColorControlPanel />
@@ -71,6 +78,10 @@ const Design = () => {
                                     )}
                                 </>
                             )}
+
+                            {viewMode === 'local' && <NeuronExplorer onBack={handleBackToEditor} />}
+
+                            {viewMode === 'neuromorph' && <NeuroMorphExplorer onBack={handleBackToEditor} />}
                         </div>
                     </>
                 )}
@@ -78,4 +89,5 @@ const Design = () => {
         </div>
     );
 };
+
 export default Design;

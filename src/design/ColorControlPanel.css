@@ -15,7 +15,7 @@
 .ColorGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    gap: 0.25rem;
     width: 100%;
 }
 
@@ -84,6 +84,7 @@
 /* Style the range input for better visibility */
 .ColorInputs input[type="range"] {
     -webkit-appearance: none;
+    appearance: none;
     height: 5px;
     background: #ddd;
     border-radius: 5px;

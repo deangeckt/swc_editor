@@ -40,6 +40,7 @@ export function useDesign() {
                 try {
                     const r = importFile(text as string, state.stage.rootX, state.stage.rootY);
                     setState({ ...state, ...r, file: filename });
+                    localStorage.removeItem('neuromorph_search_neuron');
                     // console.log(r);
                 } catch (e) {
                     setError((e as Error).message);

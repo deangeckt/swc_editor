@@ -77,6 +77,7 @@ export interface IAppState {
     section3DVisibility: Dictionary<boolean>; // Track visibility in 3D mode
     zScale: number; // Scale factor for z-coordinates in 3D view
     yAxisInverted: boolean; // Controls whether Y axis is inverted
+    activeSpecies: string; // Track active species in NeuronExplorer
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -136,6 +137,7 @@ const init_app_state: IAppState = {
     section3DVisibility: Object.keys(section_color).reduce((acc, key) => ({ ...acc, [key]: true }), {}),
     zScale: 5,
     yAxisInverted: true,
+    activeSpecies: 'Mouse', // Default active species
 };
 
 const Wrapper = (props: any) => {
