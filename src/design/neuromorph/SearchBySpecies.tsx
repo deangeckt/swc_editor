@@ -129,7 +129,8 @@ const SearchBySpecies: React.FC = () => {
         try {
             // Try a more direct search approach
             // This URL format comes from examining the API's documentation for "Select query"
-            const url = `${API_BASE_URL}/neuron/select?q=species:${encodeURIComponent(species)}&page=${page}&size=${limit}`;
+            const encodedSpecies = encodeURIComponent(species);
+            const url = `${API_BASE_URL}/neuron/select?q=species:"${encodedSpecies}"&page=${page}&size=${limit}`;
             console.log('Trying alternative query URL:', url);
 
             const response = await fetch(url);
@@ -195,8 +196,8 @@ const SearchBySpecies: React.FC = () => {
 
             const neuronDetails = await detailsResponse.json();
 
-            // Format the archive name and neuron name
-            const archiveName = (neuronDetails.archive || archive).toLowerCase().replace(/\s+/g, '_');
+            // Format the archive name and neuron name - preserve spaces in archive name
+            const archiveName = (neuronDetails.archive || archive).toLowerCase();
             const neuronNameFormatted = neuronDetails.neuron_name || neuronName;
 
             // Construct the download URL
