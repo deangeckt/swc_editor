@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../AppContext';
+import React, { useState } from 'react';
 import { getNeuronsBySpecies } from '../neuron_file';
 import { importFile } from '../util/swcUtils';
 import NeuronButton from './neuromorph/NeuronButton';
+import { IAppState } from '../Wrapper';
 import './NeuronLocalExplorer.css';
 import './neuromorph/neuromorph.css';
 
@@ -19,15 +19,19 @@ const getSpeciesIcon = (species: string) => {
 
 interface NeuronExplorerProps {
     onBack: () => void;
+    state: IAppState;
+    setState: React.Dispatch<React.SetStateAction<IAppState>>;
 }
 
-const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
-    const { state, setState } = useContext(AppContext);
+const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, setState }) => {
     const neuronsBySpecies = getNeuronsBySpecies();
     const [loadingNeuronId, setLoadingNeuronId] = useState<string | null>(null);
 
     const handleSpeciesChange = (species: string) => {
-        setState({ ...state, activeSpecies: species });
+        setState((prev) => ({
+            ...prev,
+            activeSpecies: species,
+        }));
     };
 
     const handleNeuronChange = async (neuronId: number, neuronName: string) => {
@@ -46,8 +50,15 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
             const response = await fetch(`${process.env.PUBLIC_URL}/${localNeuron.file_path}`);
             const text = await response.text();
             const result = importFile(text, state.stage.rootX, state.stage.rootY);
-            setState({ ...state, ...result, file: localNeuron.file_path });
-            // onBack(); // Return to editor view after loading
+
+            // Update the shared selected neuron state
+            setState((prev) => ({
+                ...prev,
+                ...result,
+                file: localNeuron.file_path,
+                selectedNeuronId: neuronId,
+                selectedNeuronSource: 'local',
+            }));
         } catch (error) {
             console.error('Error loading neuron file:', error);
         } finally {
@@ -89,7 +100,10 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack }) => {
                             png_url: '',
                         }}
                         onClick={handleNeuronChange}
-                        isSelected={state.file === neuron.file_path}
+                        isSelected={
+                            state.selectedNeuronId === parseInt(neuron.file_path.split('_')[1]) &&
+                            state.selectedNeuronSource === 'local'
+                        }
                         isLoading={loadingNeuronId === neuron.file_path}
                         detailsLink={neuron.link}
                         showDownload={false}

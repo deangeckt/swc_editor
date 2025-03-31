@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AppContext } from '../../AppContext';
+import React, { useState, useEffect } from 'react';
 import { importFile } from '../../util/swcUtils';
 import { API_BASE_URL, NeuronApiResponse, cleanSWCData } from './neuronUtils';
 import NeuronButton from './NeuronButton';
+import { IAppState } from '../../Wrapper';
 
-const SearchBySpecies: React.FC = () => {
-    const { state, setState } = useContext(AppContext);
+interface SearchBySpeciesProps {
+    selectedNeuronId: number | null;
+    onNeuronSelect: (id: number | null) => void;
+    state: IAppState;
+    setState: React.Dispatch<React.SetStateAction<IAppState>>;
+}
 
+const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onNeuronSelect, state, setState }) => {
     // Species state
     const [availableSpecies, setAvailableSpecies] = useState<string[]>([]);
     const [activeSpecies, setActiveSpecies] = useState<string>('');
@@ -19,7 +24,6 @@ const SearchBySpecies: React.FC = () => {
     const [exampleNeurons, setExampleNeurons] = useState<NeuronApiResponse[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const [selectedNeuronId, setSelectedNeuronId] = useState<number | null>(null);
 
     // We no longer auto-load from localStorage
     // Only fetch available species when component mounts
@@ -32,6 +36,21 @@ const SearchBySpecies: React.FC = () => {
                     const data = await response.json();
                     // The API returns an array of species in the 'fields' property
                     setAvailableSpecies(data.fields || []);
+
+                    // Restore saved state after species are loaded
+                    const savedActiveSpecies = localStorage.getItem('neuromorph_active_species');
+                    const savedExampleNeurons = localStorage.getItem('neuromorph_species_example_neurons');
+
+                    if (savedActiveSpecies) {
+                        setActiveSpecies(savedActiveSpecies);
+                        setSearchInitiated(true);
+                        if (savedExampleNeurons) {
+                            setExampleNeurons(JSON.parse(savedExampleNeurons));
+                        } else {
+                            // Fetch neurons for the saved species
+                            fetchNeuronsBySpecies(savedActiveSpecies);
+                        }
+                    }
                 } else {
                     console.error('Failed to fetch species:', response.status);
                     setError('Failed to load species list. Please try again.');
@@ -47,11 +66,22 @@ const SearchBySpecies: React.FC = () => {
         fetchAvailableSpecies();
     }, []);
 
+    // Save active species and example neurons to localStorage
+    useEffect(() => {
+        if (activeSpecies) {
+            localStorage.setItem('neuromorph_active_species', activeSpecies);
+        }
+        if (exampleNeurons.length > 0) {
+            localStorage.setItem('neuromorph_species_example_neurons', JSON.stringify(exampleNeurons));
+        } else {
+            localStorage.removeItem('neuromorph_species_example_neurons');
+        }
+    }, [activeSpecies, exampleNeurons]);
+
     // Explicitly call this function only when a user clicks a species
     const handleSpeciesSelection = (species: string) => {
         // Clear any existing state
         setExampleNeurons([]);
-        setSelectedNeuronId(null);
         setError(null);
         setCurrentPage(0);
         setTotalPages(0);
@@ -184,7 +214,7 @@ const SearchBySpecies: React.FC = () => {
     const loadNeuronData = async (neuronId: number, neuronName: string, archive: string) => {
         try {
             setIsLoadingSWC(true);
-            setSelectedNeuronId(neuronId);
+            onNeuronSelect(neuronId);
             setError(null);
 
             // First, get more details about the neuron to build the URL
@@ -218,12 +248,12 @@ const SearchBySpecies: React.FC = () => {
             const cleanedSwcData = cleanSWCData(swcData);
             const result = importFile(cleanedSwcData, state.stage.rootX, state.stage.rootY);
 
-            setState({
-                ...state,
+            setState((prev) => ({
+                ...prev,
                 ...result,
                 file: `api-neuron-${neuronId}`,
                 currentNeuronName: neuronName,
-            });
+            }));
         } catch (error) {
             console.error('Error loading neuron from API:', error);
             setError('Failed to load neuron. Please try using the Download SWC File button to download it manually.');

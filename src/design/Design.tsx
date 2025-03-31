@@ -18,7 +18,7 @@ type ViewMode = 'editor' | 'local' | 'neuromorph';
 
 const Design = () => {
     const { should_turn_screen } = useDesign();
-    const { state } = useContext(AppContext);
+    const { state, setState } = useContext(AppContext);
     const neuronSelected = state.selectedId === root_id;
     const lineSelected = state.selectedId !== none_selected_id && state.selectedId !== root_id;
     const canvas3DRef = useRef<TreeCanvas3DRef>(null);
@@ -79,8 +79,12 @@ const Design = () => {
                                 </>
                             )}
 
-                            {viewMode === 'local' && <NeuronLocalExplorer onBack={handleBackToEditor} />}
-                            {viewMode === 'neuromorph' && <NeuroMorphExplorer onBack={handleBackToEditor} />}
+                            {viewMode === 'local' && (
+                                <NeuronLocalExplorer onBack={handleBackToEditor} state={state} setState={setState} />
+                            )}
+                            {viewMode === 'neuromorph' && (
+                                <NeuroMorphExplorer onBack={handleBackToEditor} state={state} setState={setState} />
+                            )}
                         </div>
                     </>
                 )}

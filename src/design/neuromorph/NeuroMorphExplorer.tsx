@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import SearchByNameId from './SearchByNameId';
 import SearchBySpecies from './SearchBySpecies';
+import { IAppState } from '../../Wrapper';
 import './NeuroMorphExplorer.css';
 import './neuromorph.css';
 
-type ExplorerMode = 'search' | 'explore';
+// type ExplorerMode = 'search' | 'explore';
 
 interface NeuroMorphExplorerProps {
     onBack: () => void;
+    state: IAppState;
+    setState: React.Dispatch<React.SetStateAction<IAppState>>;
 }
 
-const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack }) => {
-    // Get previously selected mode from localStorage or default to search
-    const initialMode = (localStorage.getItem('neuromorph_explorer_mode') as ExplorerMode) || 'search';
-    const [mode, setMode] = useState<ExplorerMode>(initialMode);
+const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack, state, setState }) => {
+    const [activeMode, setActiveMode] = useState<'name' | 'species'>('name');
 
-    // Save mode selection to localStorage
-    const handleModeChange = (newMode: ExplorerMode) => {
-        setMode(newMode);
-        localStorage.setItem('neuromorph_explorer_mode', newMode);
+    const handleNeuronSelect = (id: number | null) => {
+        setState((prev) => ({
+            ...prev,
+            selectedNeuronId: id,
+            selectedNeuronSource: id ? 'neuromorph' : null,
+        }));
     };
 
     return (
@@ -33,21 +36,37 @@ const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack }) => {
             {/* Mode selector */}
             <div className="mode-selector">
                 <button
-                    className={`mode-button ${mode === 'search' ? 'active' : ''}`}
-                    onClick={() => handleModeChange('search')}
+                    className={`mode-button ${activeMode === 'name' ? 'active' : ''}`}
+                    onClick={() => setActiveMode('name')}
                 >
                     Search by Name/ID
                 </button>
                 <button
-                    className={`mode-button ${mode === 'explore' ? 'active' : ''}`}
-                    onClick={() => handleModeChange('explore')}
+                    className={`mode-button ${activeMode === 'species' ? 'active' : ''}`}
+                    onClick={() => setActiveMode('species')}
                 >
-                    Explore by Species
+                    Search by Species
                 </button>
             </div>
 
             {/* Content based on selected mode */}
-            <div className="explorer-content">{mode === 'search' ? <SearchByNameId /> : <SearchBySpecies />}</div>
+            <div className="explorer-content">
+                {activeMode === 'name' ? (
+                    <SearchByNameId
+                        selectedNeuronId={state.selectedNeuronSource === 'neuromorph' ? state.selectedNeuronId : null}
+                        onNeuronSelect={handleNeuronSelect}
+                        state={state}
+                        setState={setState}
+                    />
+                ) : (
+                    <SearchBySpecies
+                        selectedNeuronId={state.selectedNeuronSource === 'neuromorph' ? state.selectedNeuronId : null}
+                        onNeuronSelect={handleNeuronSelect}
+                        state={state}
+                        setState={setState}
+                    />
+                )}
+            </div>
         </div>
     );
 };

@@ -78,6 +78,8 @@ export interface IAppState {
     zScale: number; // Scale factor for z-coordinates in 3D view
     yAxisInverted: boolean; // Controls whether Y axis is inverted
     activeSpecies: string; // Track active species in NeuronExplorer
+    selectedNeuronId: number | null; // Track selected neuron ID
+    selectedNeuronSource: 'local' | 'neuromorph' | null; // Track which explorer the neuron came from
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -122,7 +124,7 @@ export const design_init_root_line = () => {
     };
 };
 
-const init_app_state: IAppState = {
+export const init_app_state: IAppState = {
     stage: getStage('Canvas'),
     designLines: {
         1: design_init_root_line(),
@@ -138,6 +140,8 @@ const init_app_state: IAppState = {
     zScale: 5,
     yAxisInverted: true,
     activeSpecies: 'Mouse', // Default active species
+    selectedNeuronId: null,
+    selectedNeuronSource: null,
 };
 
 const Wrapper = (props: any) => {

@@ -5,6 +5,7 @@
     padding: 1rem;
     background-color: #f5f5f5;
     overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .explorer-header {
