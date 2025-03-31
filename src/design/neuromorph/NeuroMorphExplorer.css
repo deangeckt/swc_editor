@@ -11,7 +11,7 @@
 .explorer-header {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
 }
 
 .back-button {

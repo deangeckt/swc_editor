@@ -39,7 +39,7 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
             // Find the local neuron data to get the file path
             const localNeuron = Object.values(neuronsBySpecies)
                 .flat()
-                .find((n) => n.display_name === neuronName);
+                .find((n) => n.file_path === neuronName);
 
             if (!localNeuron) {
                 console.error('Could not find local neuron data');
@@ -87,23 +87,20 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
                 ))}
             </div>
             <div className="neuron-list">
-                {neuronsBySpecies[state.activeSpecies].map((neuron) => (
+                {neuronsBySpecies[state.activeSpecies].map((neuron, index) => (
                     <NeuronButton
                         key={neuron.file_path}
                         neuron={{
-                            neuron_id: parseInt(neuron.file_path.split('_')[1]) || 0,
-                            neuron_name: neuron.display_name,
+                            neuron_id: index,
+                            neuron_name: neuron.neuron_name,
                             species: neuron.species,
-                            brain_region: [neuron.description],
-                            cell_type: [neuron.display_name.split(' ')[0]],
+                            brain_region: [neuron.brain_region],
+                            cell_type: [neuron.cell_type],
                             archive: 'Local',
                             png_url: '',
                         }}
-                        onClick={handleNeuronChange}
-                        isSelected={
-                            state.selectedNeuronId === parseInt(neuron.file_path.split('_')[1]) &&
-                            state.selectedNeuronSource === 'local'
-                        }
+                        onClick={(id) => handleNeuronChange(id, neuron.file_path)}
+                        isSelected={state.selectedNeuronId === index && state.selectedNeuronSource === 'local'}
                         isLoading={loadingNeuronId === neuron.file_path}
                         detailsLink={neuron.link}
                         showDownload={false}
