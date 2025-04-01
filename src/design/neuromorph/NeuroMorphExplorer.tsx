@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SearchByNameId from './SearchByNameId';
 import SearchBySpecies from './SearchBySpecies';
 import { IAppState } from '../../Wrapper';
@@ -14,9 +14,9 @@ interface NeuroMorphExplorerProps {
 }
 
 const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack, state, setState }) => {
-    const [activeMode, setActiveMode] = useState<'name' | 'species'>('name');
+    // const [activeMode, setActiveMode] = useState<'name' | 'species'>('name');
 
-    const handleNeuronSelect = (id: number | null) => {
+    const handleNeuronSelect = (id: string | number | null) => {
         setState((prev) => ({
             ...prev,
             selectedNeuronId: id,
@@ -36,14 +36,14 @@ const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack, state, 
             {/* Mode selector */}
             <div className="mode-selector">
                 <button
-                    className={`mode-button ${activeMode === 'name' ? 'active' : ''}`}
-                    onClick={() => setActiveMode('name')}
+                    className={`mode-button ${state.activeMorphMode === 'name' ? 'active' : ''}`}
+                    onClick={() => setState((prev) => ({ ...prev, activeMorphMode: 'name' }))}
                 >
                     Search by Name/ID
                 </button>
                 <button
-                    className={`mode-button ${activeMode === 'species' ? 'active' : ''}`}
-                    onClick={() => setActiveMode('species')}
+                    className={`mode-button ${state.activeMorphMode === 'species' ? 'active' : ''}`}
+                    onClick={() => setState((prev) => ({ ...prev, activeMorphMode: 'species' }))}
                 >
                     Search by Species
                 </button>
@@ -51,7 +51,7 @@ const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack, state, 
 
             {/* Content based on selected mode */}
             <div className="explorer-content">
-                {activeMode === 'name' ? (
+                {state.activeMorphMode === 'name' ? (
                     <SearchByNameId
                         selectedNeuronId={state.selectedNeuronSource === 'neuromorph' ? state.selectedNeuronId : null}
                         onNeuronSelect={handleNeuronSelect}

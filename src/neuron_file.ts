@@ -60,8 +60,6 @@ export const neuron_files: NeuronFile[] = [
     },
 ];
 
-export const neuron_files_display_name = neuron_files.map((neuron) => neuron.neuron_name);
-
 // Helper function to group neurons by species
 export const getNeuronsBySpecies = () => {
     return neuron_files.reduce(

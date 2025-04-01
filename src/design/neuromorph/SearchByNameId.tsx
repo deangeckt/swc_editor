@@ -5,8 +5,8 @@ import NeuronButton from './NeuronButton';
 import { IAppState } from '../../Wrapper';
 
 interface SearchByNameIdProps {
-    selectedNeuronId: number | null;
-    onNeuronSelect: (id: number | null) => void;
+    selectedNeuronId: string | number | null;
+    onNeuronSelect: (id: string | number | null) => void;
     state: IAppState;
     setState: React.Dispatch<React.SetStateAction<IAppState>>;
 }
@@ -40,7 +40,7 @@ const SearchByNameId: React.FC<SearchByNameIdProps> = ({ selectedNeuronId, onNeu
     }, [foundNeuron]);
 
     // Load the neuron data into the application
-    const loadNeuronData = async (neuronId: number, neuronName: string, archive: string) => {
+    const loadNeuronData = async (neuronId: string | number, neuronName: string, archive: string) => {
         try {
             setIsLoadingSWC(true);
             onNeuronSelect(neuronId);

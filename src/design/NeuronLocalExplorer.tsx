@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getNeuronsBySpecies } from '../neuron_file';
 import { importFile } from '../util/swcUtils';
 import NeuronButton from './neuromorph/NeuronButton';
-import { IAppState } from '../Wrapper';
+import { IAppState, root_id } from '../Wrapper';
 import './NeuronLocalExplorer.css';
 import './neuromorph/neuromorph.css';
 
@@ -30,11 +30,11 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
     const handleSpeciesChange = (species: string) => {
         setState((prev) => ({
             ...prev,
-            activeSpecies: species,
+            activeLocalSpecies: species,
         }));
     };
 
-    const handleNeuronChange = async (neuronId: number, neuronName: string) => {
+    const handleNeuronChange = async (neuronId: string | number, neuronName: string) => {
         try {
             // Find the local neuron data to get the file path
             const localNeuron = Object.values(neuronsBySpecies)
@@ -51,13 +51,14 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
             const text = await response.text();
             const result = importFile(text, state.stage.rootX, state.stage.rootY);
 
-            // Update the shared selected neuron state
+            // Update the shared selected neuron state, ensuring we clear any previous selection
             setState((prev) => ({
                 ...prev,
                 ...result,
                 file: localNeuron.file_path,
                 selectedNeuronId: neuronId,
                 selectedNeuronSource: 'local',
+                selectedId: root_id, // Reset the selected line/point to root
             }));
         } catch (error) {
             console.error('Error loading neuron file:', error);
@@ -78,7 +79,7 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
                 {Object.keys(neuronsBySpecies).map((species) => (
                     <button
                         key={species}
-                        className={`species-tab ${state.activeSpecies === species ? 'active' : ''}`}
+                        className={`species-tab ${state.activeLocalSpecies === species ? 'active' : ''}`}
                         onClick={() => handleSpeciesChange(species)}
                     >
                         <span className="species-icon">{getSpeciesIcon(species)}</span>
@@ -87,11 +88,11 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
                 ))}
             </div>
             <div className="neuron-list">
-                {neuronsBySpecies[state.activeSpecies].map((neuron, index) => (
+                {neuronsBySpecies[state.activeLocalSpecies].map((neuron) => (
                     <NeuronButton
                         key={neuron.file_path}
                         neuron={{
-                            neuron_id: index,
+                            neuron_id: `local_${neuron.file_path}`,
                             neuron_name: neuron.neuron_name,
                             species: neuron.species,
                             brain_region: [neuron.brain_region],
@@ -100,7 +101,10 @@ const NeuronLocalExplorer: React.FC<NeuronExplorerProps> = ({ onBack, state, set
                             png_url: '',
                         }}
                         onClick={(id) => handleNeuronChange(id, neuron.file_path)}
-                        isSelected={state.selectedNeuronId === index && state.selectedNeuronSource === 'local'}
+                        isSelected={
+                            state.selectedNeuronId === `local_${neuron.file_path}` &&
+                            state.selectedNeuronSource === 'local'
+                        }
                         isLoading={loadingNeuronId === neuron.file_path}
                         detailsLink={neuron.link}
                         showDownload={false}

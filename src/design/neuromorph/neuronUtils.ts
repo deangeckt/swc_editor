@@ -10,11 +10,10 @@ export interface NeuronApiResponse {
     cell_type: string[];
     archive: string;
     png_url: string;
-    // Add other properties as needed
 }
 
 // Generate download URL for a neuron
-export const getDownloadUrl = (neuronId: number, neuronName: string, archive: string): string => {
+export const getDownloadUrl = (neuronId: string | number, neuronName: string, archive: string): string => {
     // Format the archive name to match URL requirements (lowercase, underscores)
     const archiveName = archive.toLowerCase().replace(/\s+/g, '_');
     return `https://neuromorpho.org/dableFiles/${archiveName}/CNG%20version/${neuronName}.CNG.swc`;

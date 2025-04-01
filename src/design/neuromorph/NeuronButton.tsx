@@ -1,9 +1,10 @@
 import React from 'react';
 import { NeuronApiResponse, getDownloadUrl, openLinkInNewTab } from './neuronUtils';
+import { LocalNeuron } from './localNeuronTypes';
 
 interface NeuronButtonProps {
-    neuron: NeuronApiResponse;
-    onClick: (neuronId: number, neuronName: string, archive: string) => void;
+    neuron: NeuronApiResponse | LocalNeuron;
+    onClick: (neuronId: string | number, neuronName: string, archive: string) => void;
     isSelected?: boolean;
     isLoading?: boolean;
     detailsLink?: string;
@@ -60,22 +61,15 @@ const NeuronButton: React.FC<NeuronButtonProps> = ({
                         Download SWC File
                     </a>
                 )}
-                {detailsLink ? (
-                    <a className="neuron-link" href={detailsLink} onClick={(e) => handleLinkClick(e, detailsLink)}>
-                        More Details
-                    </a>
-                ) : (
+                {detailsLink && (
                     <a
+                        href={detailsLink}
+                        onClick={(e) => handleLinkClick(e, detailsLink)}
                         className="neuron-link"
-                        href={`https://neuromorpho.org/neuron_info.jsp?neuron_name=${neuron.neuron_name}`}
-                        onClick={(e) =>
-                            handleLinkClick(
-                                e,
-                                `https://neuromorpho.org/neuron_info.jsp?neuron_name=${neuron.neuron_name}`,
-                            )
-                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
-                        View on NeuroMorpho.org
+                        View Details
                     </a>
                 )}
             </div>
