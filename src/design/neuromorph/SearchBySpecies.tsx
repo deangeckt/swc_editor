@@ -65,12 +65,14 @@ const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onN
 
                 // Using neuron/select with q parameter for species
                 const url = new URL(`${API_BASE_URL}/neuron/select`);
-                url.searchParams.append('q', `species:${encodeURIComponent(selectedSpecies)}`);
+                url.searchParams.append('q', `species:"${selectedSpecies}"`);
                 url.searchParams.append('size', '100');
 
-                console.log('Fetching brain regions with URL:', url.toString());
+                // Convert %20 to + for spaces in the URL
+                const urlString = url.toString().replace(/%20/g, '+');
+                console.log('Fetching brain regions with URL:', urlString);
 
-                const response = await fetch(url.toString());
+                const response = await fetch(urlString);
 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch brain regions: ${response.status}`);
@@ -130,13 +132,15 @@ const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onN
 
                 // Using neuron/select with q parameter for species and fq for brain region
                 const url = new URL(`${API_BASE_URL}/neuron/select`);
-                url.searchParams.append('q', `species:${encodeURIComponent(selectedSpecies)}`);
-                url.searchParams.append('fq', `brain_region:${encodeURIComponent(selectedBrainRegion)}`);
+                url.searchParams.append('q', `species:"${selectedSpecies}"`);
+                url.searchParams.append('fq', `brain_region:${selectedBrainRegion}`);
                 url.searchParams.append('size', '100');
 
-                console.log('Fetching cell types with URL:', url.toString());
+                // Convert %20 to + for spaces in the URL
+                const urlString = url.toString().replace(/%20/g, '+');
+                console.log('Fetching cell types with URL:', urlString);
 
-                const response = await fetch(url.toString());
+                const response = await fetch(urlString);
 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch cell types: ${response.status}`);
@@ -196,18 +200,18 @@ const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onN
                 setIsLoading(true);
 
                 // Using the neuron/select endpoint with proper q and fq parameters format
-                // This format is confirmed to work with the API:
-                // http://cng.gmu.edu:8080/api/neuron/select?q=species:mouse&fq=brain_region:neocortex&fq=cell_type:principal+cell&size=5
                 const url = new URL(`${API_BASE_URL}/neuron/select`);
-                // Handle potential spaces in parameter values
-                url.searchParams.append('q', `species:${encodeURIComponent(selectedSpecies)}`);
-                url.searchParams.append('fq', `brain_region:${encodeURIComponent(selectedBrainRegion)}`);
-                url.searchParams.append('fq', `cell_type:${encodeURIComponent(selectedCellType)}`);
+                url.searchParams.append('q', `species:"${selectedSpecies}"`);
+                url.searchParams.append('fq', `brain_region:${selectedBrainRegion}`);
+                url.searchParams.append('fq', `cell_type:${selectedCellType}`);
                 url.searchParams.append('size', '5');
 
-                console.log('Fetching neurons with URL:', url.toString());
+                // Convert %20 to + for spaces in the URL
+                const urlString = url.toString().replace(/%20/g, '+');
+                console.log('Fetching neurons with URL:', urlString);
 
-                const response = await fetch(url.toString());
+                const response = await fetch(urlString);
+
                 if (!response.ok) {
                     if (response.status === 404) {
                         throw new Error(`Failed to fetch neurons: ${response.status}`);
