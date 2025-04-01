@@ -6,6 +6,7 @@
     background-color: #f5f5f5;
     overflow-y: hidden;
     overflow-x: hidden;
+    gap: 0.5em;
 }
 
 .explorer-header {
@@ -192,7 +193,7 @@
 .mode-selector {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin: 1rem;
 }
 
 .mode-button {

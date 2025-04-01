@@ -20,8 +20,8 @@
 .Canvas {
     display: flex;
     height: 100%;
-    flex-basis: 75%;
-    min-width: 75%;
+    flex-basis: 65%;
+    min-width: 65%;
 }
 
 .ControlPanel {
@@ -33,7 +33,7 @@
     /* justify-content: space-around; */
     overflow-y: auto;
     /* gap: 1em; */
-    min-width: 25%;
+    min-width: 35%;
     overflow-x: hidden;
 }
 
