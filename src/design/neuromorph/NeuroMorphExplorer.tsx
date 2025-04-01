@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchByNameId from './SearchByNameId';
-import SearchBySpecies from './SearchBySpecies';
+import SearchByFeatures from './SearchByFeatures';
 import { IAppState } from '../../Wrapper';
 import './NeuroMorphExplorer.css';
 import './neuromorph.css';
@@ -45,7 +45,7 @@ const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack, state, 
                     className={`mode-button ${state.activeMorphMode === 'species' ? 'active' : ''}`}
                     onClick={() => setState((prev) => ({ ...prev, activeMorphMode: 'species' }))}
                 >
-                    Search by Species
+                    Search by Features
                 </button>
             </div>
 
@@ -59,7 +59,7 @@ const NeuroMorphExplorer: React.FC<NeuroMorphExplorerProps> = ({ onBack, state, 
                         setState={setState}
                     />
                 ) : (
-                    <SearchBySpecies
+                    <SearchByFeatures
                         selectedNeuronId={state.selectedNeuronSource === 'neuromorph' ? state.selectedNeuronId : null}
                         onNeuronSelect={handleNeuronSelect}
                         state={state}

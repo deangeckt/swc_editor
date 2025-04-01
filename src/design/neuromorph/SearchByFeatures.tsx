@@ -4,7 +4,7 @@ import { API_BASE_URL, NeuronApiResponse, cleanSWCData } from './neuronUtils';
 import NeuronButton from './NeuronButton';
 import { IAppState } from '../../Wrapper';
 
-interface SearchBySpeciesProps {
+interface SearchByFeaturesProps {
     selectedNeuronId: string | number | null;
     onNeuronSelect: (id: string | number | null) => void;
     state: IAppState;
@@ -13,7 +13,7 @@ interface SearchBySpeciesProps {
 
 type SelectionStep = 'species' | 'brain_region' | 'cell_type' | 'neuron';
 
-const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onNeuronSelect, state, setState }) => {
+const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, onNeuronSelect, state, setState }) => {
     // Step state
     const [currentStep, setCurrentStep] = useState<SelectionStep>('species');
     const [selectedSpecies, setSelectedSpecies] = useState<string>('');
@@ -481,7 +481,7 @@ const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onN
     };
 
     return (
-        <div className="explore-by-species">
+        <div className="explore-by-features">
             <div className="step-indicator">
                 <div
                     className={`step ${currentStep === 'species' ? 'active' : ''} ${selectedSpecies ? 'completed' : ''}`}
@@ -518,4 +518,4 @@ const SearchBySpecies: React.FC<SearchBySpeciesProps> = ({ selectedNeuronId, onN
     );
 };
 
-export default SearchBySpecies;
+export default SearchByFeatures;
