@@ -1,6 +1,6 @@
 // API base URL
-export const API_BASE_URL = 'http://cng.gmu.edu:8080/api';
-
+// export const API_BASE_URL = 'http://cng.gmu.edu:8080/api';
+export const API_BASE_URL = 'https://neuromorpho.org/api';
 // Define interfaces for API responses
 export interface NeuronApiResponse {
     neuron_id: number;
