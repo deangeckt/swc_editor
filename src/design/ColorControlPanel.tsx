@@ -81,7 +81,15 @@ const ColorControlPanel = () => {
                                 <input
                                     type="color"
                                     value={colorState.hex}
-                                    onChange={(e) => handleColorChange(id, e.target.value)}
+                                    onInput={(e) => {
+                                        handleColorChange(id, (e.target as HTMLInputElement).value);
+                                        // handleColorComplete(id);
+                                    }}
+                                    onChange={(e) => {
+                                        handleColorChange(id, e.target.value);
+                                        // handleColorComplete(id);
+                                    }}
+                                    onTouchEnd={() => handleColorComplete(id)}
                                     onBlur={() => handleColorComplete(id)}
                                 />
                                 {state.is3D ? (
