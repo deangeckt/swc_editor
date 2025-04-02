@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../AppContext';
 import './ZScaleControl.css';
+import './Controls.css';
 
 const ZScaleControl = () => {
     const { state, setState } = useContext(AppContext);
@@ -10,7 +11,7 @@ const ZScaleControl = () => {
     };
 
     return (
-        <div className="ZScaleControl">
+        <div className="control-group">
             <h3>Z Scale</h3>
             <div className="ZScaleInputs">
                 <input

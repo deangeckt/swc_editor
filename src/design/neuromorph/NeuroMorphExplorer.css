@@ -1,46 +1,110 @@
 .NeuroMorphExplorer {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 0.5rem;
     padding: 1rem;
-    background-color: #f5f5f5;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    gap: 0.5em;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 .explorer-header {
     display: flex;
     align-items: center;
-}
-
-.back-button {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    color: #666;
-    cursor: pointer;
-    padding: 0.5rem;
-    margin-right: 1rem;
-}
-
-.back-button:hover {
-    color: #333;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
 }
 
 .explorer-header h2 {
     margin: 0;
-    color: #333;
+    font-size: 1.2rem;
 }
 
-.search-section {
-    margin-bottom: 1rem;
+.back-button {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #007bff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 
+/* Mode selector */
+.mode-selector {
+    display: flex;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ccc;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.mode-button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #666;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.mode-button:hover {
+    background-color: #f0f0f0;
+}
+
+.mode-button.active {
+    background-color: #e0e0e0;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Explorer content */
+.explorer-content {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 0.5rem;
+    margin: 0;
+    height: 100%;
+}
+
+.explorer-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.explorer-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.explorer-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.explorer-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Search controls */
 .search-controls {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    padding: 0.5rem 0;
 }
 
 .search-controls select,
@@ -48,159 +112,115 @@
     padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 0.9rem;
 }
 
 .search-controls input {
     flex: 1;
 }
 
-.search-controls button {
+.search-button {
     padding: 0.5rem 1rem;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    min-width: 80px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
-.search-controls button:hover:not(:disabled) {
+.search-button:hover:not(:disabled) {
     background-color: #0056b3;
 }
 
-.search-controls button:disabled {
+.search-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-}
-
-.species-icon {
-    font-size: 1.2rem;
 }
 
 .error-message {
     color: #dc3545;
     padding: 0.5rem;
-    margin-bottom: 1rem;
+    margin: 0.5rem 0;
     background-color: #f8d7da;
     border-radius: 4px;
+    font-size: 0.9rem;
 }
 
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.loading-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #007bff;
-    padding: 2rem;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #007bff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
+.loading-indicator {
+    text-align: center;
     padding: 1rem;
-    background-color: white;
-    border-radius: 4px;
+    color: #666;
+    font-size: 0.9rem;
 }
 
-.pagination button {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+@media (max-width: 768px) {
+    .NeuroMorphExplorer {
+        padding: 0.75rem;
+        gap: 0.75rem;
+        height: 100%;
+    }
+
+    .explorer-header {
+        padding-bottom: 0.4rem;
+    }
+
+    .explorer-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .back-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .mode-selector {
+        gap: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+
+    .mode-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .explorer-content {
+        gap: 0.6rem;
+        padding-right: 0.4rem;
+        height: 100%;
+    }
 }
 
-.pagination button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
+@media (max-width: 480px) {
+    .NeuroMorphExplorer {
+        padding: 0.5rem;
+        gap: 0.5rem;
+        height: 100%;
+    }
 
-.pagination button:hover:not(:disabled) {
-    background-color: #0056b3;
-}
+    .explorer-header h2 {
+        font-size: 1rem;
+    }
 
-/* Mode selector */
-.mode-selector {
-    display: flex;
-    gap: 1rem;
-    margin: 1rem;
-}
+    .back-button {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.85rem;
+    }
 
-.mode-button {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: all 0.2s;
-}
+    .mode-selector {
+        gap: 0.3rem;
+        padding-bottom: 0.3rem;
+    }
 
-.mode-button:hover {
-    background-color: #e9e9e9;
-}
+    .mode-button {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.85rem;
+    }
 
-.mode-button.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;
-}
-
-/* Explore section */
-.explore-section {
-    margin-bottom: 1.5rem;
-}
-
-.explore-section h3 {
-    margin-bottom: 1rem;
-    color: #555;
-}
-
-/* Explorer content */
-.explorer-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0.25rem;
+    .explorer-content {
+        gap: 0.5rem;
+        padding-right: 0.3rem;
+        height: 100%;
+    }
 }

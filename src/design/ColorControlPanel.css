@@ -4,7 +4,6 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    margin-bottom: 1rem;
 }
 
 .ColorControlPanel h3 {
@@ -18,6 +17,7 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 0.25rem;
     width: 100%;
+    padding-bottom: 0.5rem;
 }
 
 .ColorControl {
@@ -161,6 +161,7 @@
 @media screen and (max-width: 480px) {
     .ColorControlPanel {
         padding: 0.5rem;
+        /* margin-bottom: 15%; */
     }
 
     .ColorControlPanel h3 {
@@ -170,6 +171,7 @@
 
     .ColorGrid {
         gap: 0.5rem;
+        grid-template-columns: 1fr;
     }
 
     .ColorControl {

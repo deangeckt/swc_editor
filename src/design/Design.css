@@ -30,11 +30,10 @@
     display: flex;
     flex-direction: column;
     border-left: 2px solid #efefef;
-    /* justify-content: space-around; */
     overflow-y: auto;
-    /* gap: 1em; */
     min-width: 35%;
     overflow-x: hidden;
+    background: white;
 }
 
 .NoCapsButton {
@@ -61,11 +60,10 @@
 .view-controls {
     display: flex;
     gap: 1rem;
-    /* margin-bottom: 1rem; */
     padding: 1rem;
     background-color: white;
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
 }
 
 .view-button {
@@ -84,4 +82,60 @@
     background-color: #0056b3;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .MainPanel {
+        flex-direction: column;
+    }
+
+    .Canvas {
+        flex-basis: 50%;
+        min-width: 100%;
+        height: 50%;
+    }
+
+    .ControlPanel {
+        flex-basis: 50%;
+        min-width: 100%;
+        height: 50%;
+        border-left: none;
+        border-top: 2px solid #efefef;
+    }
+
+    .view-controls {
+        flex-direction: row;
+        padding: 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .view-button {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .Canvas {
+        flex-basis: 40%;
+        height: 40%;
+    }
+
+    .ControlPanel {
+        flex-basis: 60%;
+        height: 60%;
+        margin-bottom: 15%;
+
+    }
+
+    .view-controls {
+        padding: 0.5rem;
+        gap: 0.4rem;
+    }
+
+    .view-button {
+        padding: 0.4rem;
+        font-size: 0.85rem;
+    }
 }
