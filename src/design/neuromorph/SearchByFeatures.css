@@ -18,3 +18,29 @@
         transform: rotate(360deg);
     }
 }
+
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.load-more-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.load-more-button:hover {
+    background-color: #e0e0e0;
+}
+
+.load-more-button:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}

@@ -1,6 +1,13 @@
 // API base URL
 // export const API_BASE_URL = 'http://cng.gmu.edu:8080/api';
 export const API_BASE_URL = 'https://neuromorpho.org/api';
+
+// Convert HTTP URLs to HTTPS
+export const ensureHttps = (url: string): string => {
+    if (!url) return url;
+    return url.replace(/^http:/, 'https:');
+};
+
 // Define interfaces for API responses
 export interface NeuronApiResponse {
     neuron_id: number;

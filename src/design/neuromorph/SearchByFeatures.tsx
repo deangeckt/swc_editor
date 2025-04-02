@@ -26,6 +26,8 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
     const [availableBrainRegions, setAvailableBrainRegions] = useState<string[]>([]);
     const [availableCellTypes, setAvailableCellTypes] = useState<string[]>([]);
     const [availableNeurons, setAvailableNeurons] = useState<NeuronApiResponse[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [hasMore, setHasMore] = useState<boolean>(true);
 
     // Loading and error states
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -199,6 +201,8 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
 
             try {
                 setIsLoading(true);
+                setCurrentPage(0); // Reset page when criteria changes
+                setHasMore(true);
 
                 // Using the neuron/select endpoint with proper q and fq parameters format
                 const url = new URL(`${API_BASE_URL}/neuron/select`);
@@ -206,6 +210,7 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                 url.searchParams.append('fq', `brain_region:${selectedBrainRegion}`);
                 url.searchParams.append('fq', `cell_type:${selectedCellType}`);
                 url.searchParams.append('size', '5');
+                url.searchParams.append('page', '0');
 
                 // Convert %20 to + for spaces in the URL
                 const urlString = url.toString().replace(/%20/g, '+');
@@ -223,12 +228,14 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                 const data = await response.json();
                 if (data._embedded?.neuronResources) {
                     setAvailableNeurons(data._embedded.neuronResources);
+                    setHasMore(data._embedded.neuronResources.length === 5); // If we got 5 results, there might be more
 
                     if (data._embedded.neuronResources.length === 0) {
                         setError('No matching neurons found with the selected criteria.');
                     }
                 } else {
                     setAvailableNeurons([]);
+                    setHasMore(false);
                     setError('No matching neurons found with the selected criteria.');
                 }
             } catch (err) {
@@ -241,6 +248,46 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
 
         fetchNeurons();
     }, [selectedSpecies, selectedBrainRegion, selectedCellType]);
+
+    // Function to load more neurons
+    const loadMoreNeurons = async () => {
+        if (!selectedSpecies || !selectedBrainRegion || !selectedCellType || !hasMore) return;
+
+        try {
+            setIsLoading(true);
+            const nextPage = currentPage + 1;
+
+            const url = new URL(`${API_BASE_URL}/neuron/select`);
+            url.searchParams.append('q', `species:"${selectedSpecies}"`);
+            url.searchParams.append('fq', `brain_region:${selectedBrainRegion}`);
+            url.searchParams.append('fq', `cell_type:${selectedCellType}`);
+            url.searchParams.append('size', '5');
+            url.searchParams.append('page', nextPage.toString());
+
+            const urlString = url.toString().replace(/%20/g, '+');
+            console.log('Fetching more neurons with URL:', urlString);
+
+            const response = await fetch(urlString);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch more neurons: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data._embedded?.neuronResources) {
+                setAvailableNeurons((prev) => [...prev, ...data._embedded.neuronResources]);
+                setHasMore(data._embedded.neuronResources.length === 5);
+                setCurrentPage(nextPage);
+            } else {
+                setHasMore(false);
+            }
+        } catch (err) {
+            console.error('Error fetching more neurons:', err);
+            setError('Failed to load more neurons. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // Handle selection of each step
     const handleSpeciesSelect = (species: string) => {
@@ -454,7 +501,7 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                 return (
                     <div className="selection-step">
                         {!isLoading && <h3>Select a Neuron</h3>}
-                        {isLoading ? (
+                        {isLoading && currentPage === 0 && availableNeurons.length === 0 ? (
                             <div className="small-spinner"></div>
                         ) : (
                             <>
@@ -476,6 +523,17 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                                         </div>
                                     )}
                                 </div>
+                                {hasMore && (
+                                    <div className="load-more-container">
+                                        <button
+                                            className="load-more-button"
+                                            onClick={loadMoreNeurons}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? 'Loading...' : 'Load More Neurons'}
+                                        </button>
+                                    </div>
+                                )}
                                 <div className="step-navigation">
                                     <button className="back-button" onClick={handleBack}>
                                         ← Back to Cell Type

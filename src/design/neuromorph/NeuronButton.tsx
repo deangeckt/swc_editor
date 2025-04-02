@@ -1,5 +1,5 @@
 import React from 'react';
-import { NeuronApiResponse, getDownloadUrl, openLinkInNewTab } from './neuronUtils';
+import { NeuronApiResponse, getDownloadUrl, openLinkInNewTab, ensureHttps } from './neuronUtils';
 import { LocalNeuron } from './localNeuronTypes';
 
 interface NeuronButtonProps {
@@ -46,7 +46,11 @@ const NeuronButton: React.FC<NeuronButtonProps> = ({
                 <span>Brain Region: {neuron.brain_region?.join(', ')}</span>
             </div>
             {neuron.png_url && (
-                <img src={neuron.png_url} alt={`Preview of ${neuron.neuron_name}`} className="neuron-preview" />
+                <img
+                    src={ensureHttps(neuron.png_url)}
+                    alt={`Preview of ${neuron.neuron_name}`}
+                    className="neuron-preview"
+                />
             )}
             <div className="neuron-actions">
                 {showDownload && (
