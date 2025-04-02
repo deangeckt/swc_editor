@@ -243,22 +243,31 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
 
     // Handle selection of each step
     const handleSpeciesSelect = (species: string) => {
-        setSelectedSpecies(species);
-        setSelectedBrainRegion('');
-        setSelectedCellType('');
-        setAvailableNeurons([]);
+        // Only clear state if selecting a different species
+        if (species !== selectedSpecies) {
+            setSelectedSpecies(species);
+            setSelectedBrainRegion('');
+            setSelectedCellType('');
+            setAvailableNeurons([]);
+        }
         setCurrentStep('brain_region');
     };
 
     const handleBrainRegionSelect = (region: string) => {
-        setSelectedBrainRegion(region);
-        setSelectedCellType('');
-        setAvailableNeurons([]);
+        // Only clear state if selecting a different region
+        if (region !== selectedBrainRegion) {
+            setSelectedBrainRegion(region);
+            setSelectedCellType('');
+            setAvailableNeurons([]);
+        }
         setCurrentStep('cell_type');
     };
 
     const handleCellTypeSelect = (cellType: string) => {
-        setSelectedCellType(cellType);
+        // Only clear state if selecting a different cell type
+        if (cellType !== selectedCellType) {
+            setSelectedCellType(cellType);
+        }
         setCurrentStep('neuron');
     };
 
@@ -269,24 +278,12 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
         switch (currentStep) {
             case 'brain_region':
                 setCurrentStep('species');
-                // Clear all subsequent selections when going back to species
-                setSelectedBrainRegion('');
-                setSelectedCellType('');
-                setAvailableBrainRegions([]);
-                setAvailableCellTypes([]);
-                setAvailableNeurons([]);
                 break;
             case 'cell_type':
                 setCurrentStep('brain_region');
-                // Clear cell type and neuron selections when going back to brain region
-                setSelectedCellType('');
-                setAvailableCellTypes([]);
-                setAvailableNeurons([]);
                 break;
             case 'neuron':
                 setCurrentStep('cell_type');
-                // Clear neuron selections when going back to cell type
-                setAvailableNeurons([]);
                 break;
         }
     };
@@ -302,21 +299,6 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
         ) {
             setCurrentStep(step);
             setError(null);
-
-            // Clean up state when navigating to previous steps
-            if (step === 'species') {
-                setSelectedBrainRegion('');
-                setSelectedCellType('');
-                setAvailableBrainRegions([]);
-                setAvailableCellTypes([]);
-                setAvailableNeurons([]);
-            } else if (step === 'brain_region') {
-                setSelectedCellType('');
-                setAvailableCellTypes([]);
-                setAvailableNeurons([]);
-            } else if (step === 'cell_type') {
-                setAvailableNeurons([]);
-            }
         }
     };
 
