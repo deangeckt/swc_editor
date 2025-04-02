@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { importFile } from '../../util/swcUtils';
-import { API_BASE_URL, NeuronApiResponse, cleanSWCData } from './neuronUtils';
+import { API_BASE_URL, NeuronApiResponse, cleanSWCData, getDetailsLink } from './neuronUtils';
 import NeuronButton from './NeuronButton';
 import { IAppState } from '../../Wrapper';
 
@@ -462,6 +462,7 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                                         onClick={loadNeuronData}
                                         isSelected={selectedNeuronId === neuron.neuron_id}
                                         isLoading={selectedNeuronId === neuron.neuron_id && isLoadingSWC}
+                                        detailsLink={getDetailsLink(neuron.neuron_name)}
                                     />
                                 ))
                             ) : (

@@ -65,3 +65,7 @@ export const openLinkInNewTab = (link: string) => {
         newWindow.location.href = link;
     }
 };
+
+export const getDetailsLink = (neuronName: string): string => {
+    return `https://neuromorpho.org/neuron_info.jsp?neuron_name=${neuronName}`;
+};
