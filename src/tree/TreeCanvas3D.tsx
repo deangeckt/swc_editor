@@ -173,7 +173,7 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
             60, // Reduced FOV for less perspective distortion
             containerRef.current.clientWidth / containerRef.current.clientHeight,
             1,
-            10000, // Increased far plane
+            50000, // Increased far plane to match max zoom distance
         );
         cameraRef.current = camera;
 
@@ -199,9 +199,59 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.minDistance = 100; // Add minimum zoom distance
-        controls.maxDistance = 5000; // Add maximum zoom distance
+        controls.maxDistance = 50000; // Increased maximum zoom distance to match camera far plane
         controls.target.set(0, 0, 0);
         controls.update();
+
+        // Add keyboard controls
+        const moveSpeed = 100; // Adjust this value to control movement speed
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (!camera || !controls) return;
+
+            const moveVector = new THREE.Vector3();
+            const cameraDirection = new THREE.Vector3();
+            camera.getWorldDirection(cameraDirection);
+
+            switch (event.key) {
+                case 'ArrowLeft':
+                    moveVector.set(-1, 0, 0);
+                    break;
+                case 'ArrowRight':
+                    moveVector.set(1, 0, 0);
+                    break;
+                case 'ArrowUp':
+                    moveVector.set(0, 1, 0);
+                    break;
+                case 'ArrowDown':
+                    moveVector.set(0, -1, 0);
+                    break;
+                case 'w':
+                case 'W':
+                    moveVector.copy(cameraDirection);
+                    break;
+                case 's':
+                case 'S':
+                    moveVector.copy(cameraDirection).multiplyScalar(-1);
+                    break;
+                case 'a':
+                case 'A':
+                    moveVector.set(-cameraDirection.z, 0, cameraDirection.x);
+                    break;
+                case 'd':
+                case 'D':
+                    moveVector.set(cameraDirection.z, 0, -cameraDirection.x);
+                    break;
+                default:
+                    return;
+            }
+
+            moveVector.normalize().multiplyScalar(moveSpeed);
+            camera.position.add(moveVector);
+            controls.target.add(moveVector);
+            controls.update();
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
 
         // Animation loop
         const animate = () => {
@@ -223,6 +273,7 @@ const TreeCanvas3D = forwardRef<TreeCanvas3DRef>((_, ref) => {
         // Cleanup
         return () => {
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('keydown', handleKeyDown);
             containerRef.current?.removeChild(renderer.domElement);
         };
     }, []);
