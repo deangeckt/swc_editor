@@ -148,6 +148,7 @@ export function importFile(text: string, screenRootX: number, screenRootY: numbe
             neuronRad = Number(fields[5]);
             ilines[root_id].radius = neuronRad;
             ilines[root_id].z = Number(fields[4]);
+            ilines[root_id].points = [screenRootX, screenRootY, screenRootX, screenRootY];
         } else {
             const iline = textLineToILine(ilines, line, screenRootX, screenRootY, x, y);
             if (iline) ilines[iline.id] = iline;
