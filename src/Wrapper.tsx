@@ -77,6 +77,10 @@ export interface IAppState {
     section3DVisibility: Dictionary<boolean>; // Track visibility in 3D mode
     zScale: number; // Scale factor for z-coordinates in 3D view
     yAxisInverted: boolean; // Controls whether Y axis is inverted
+    activeLocalSpecies: string; // Track active species in NeuronExplorer
+    selectedNeuronId: string | number | null; // Track selected neuron ID (can be string for local neurons)
+    selectedNeuronSource: 'local' | 'neuromorph' | null; // Track which explorer the neuron came from
+    activeMorphMode: 'name' | 'species';
 }
 
 export const getStage = (canvasId: string): IStageSize => {
@@ -121,7 +125,7 @@ export const design_init_root_line = () => {
     };
 };
 
-const init_app_state: IAppState = {
+export const init_app_state: IAppState = {
     stage: getStage('Canvas'),
     designLines: {
         1: design_init_root_line(),
@@ -136,6 +140,10 @@ const init_app_state: IAppState = {
     section3DVisibility: Object.keys(section_color).reduce((acc, key) => ({ ...acc, [key]: true }), {}),
     zScale: 5,
     yAxisInverted: true,
+    activeLocalSpecies: 'Mouse', // Default active species
+    selectedNeuronId: `local_${example_file}`,
+    selectedNeuronSource: 'local',
+    activeMorphMode: 'name',
 };
 
 const Wrapper = (props: any) => {

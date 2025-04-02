@@ -45,7 +45,7 @@ const TreeCanvas = () => {
             y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
         };
 
-        const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+        const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
         const newStageCoord = {
             x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
             y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
