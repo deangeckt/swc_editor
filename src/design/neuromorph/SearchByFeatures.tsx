@@ -3,6 +3,7 @@ import { importFile } from '../../util/swcUtils';
 import { API_BASE_URL, NeuronApiResponse, cleanSWCData, getDetailsLink } from './neuronUtils';
 import NeuronButton from './NeuronButton';
 import { IAppState } from '../../Wrapper';
+import './SearchByFeatures.css';
 
 interface SearchByFeaturesProps {
     selectedNeuronId: string | number | null;
@@ -66,7 +67,7 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                 // Using neuron/select with q parameter for species
                 const url = new URL(`${API_BASE_URL}/neuron/select`);
                 url.searchParams.append('q', `species:"${selectedSpecies}"`);
-                url.searchParams.append('size', '100');
+                url.searchParams.append('size', '500');
 
                 // Convert %20 to + for spaces in the URL
                 const urlString = url.toString().replace(/%20/g, '+');
@@ -134,7 +135,7 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
                 const url = new URL(`${API_BASE_URL}/neuron/select`);
                 url.searchParams.append('q', `species:"${selectedSpecies}"`);
                 url.searchParams.append('fq', `brain_region:${selectedBrainRegion}`);
-                url.searchParams.append('size', '100');
+                url.searchParams.append('size', '500');
 
                 // Convert %20 to + for spaces in the URL
                 const urlString = url.toString().replace(/%20/g, '+');
@@ -360,104 +361,128 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
             case 'species':
                 return (
                     <div className="selection-step">
-                        <h3>Select a Species</h3>
-                        <div className="options-grid">
-                            {availableSpecies.map((species) => (
-                                <button
-                                    key={`species-${species}`}
-                                    className={`option-button ${selectedSpecies === species ? 'active' : ''}`}
-                                    onClick={() => handleSpeciesSelect(species)}
-                                >
-                                    {species}
-                                </button>
-                            ))}
-                        </div>
+                        {!isLoading && <h3>Select a Species</h3>}
+                        {isLoading ? (
+                            <div className="small-spinner"></div>
+                        ) : (
+                            <div className="options-grid">
+                                {availableSpecies.map((species) => (
+                                    <button
+                                        key={`species-${species}`}
+                                        className={`option-button ${selectedSpecies === species ? 'active' : ''}`}
+                                        onClick={() => handleSpeciesSelect(species)}
+                                    >
+                                        {species}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 );
 
             case 'brain_region':
                 return (
                     <div className="selection-step">
-                        <h3>Select a Brain Region for {selectedSpecies}</h3>
-                        <div className="options-grid">
-                            {availableBrainRegions.length > 0 ? (
-                                availableBrainRegions.map((region) => (
-                                    <button
-                                        key={`region-${region}`}
-                                        className={`option-button ${selectedBrainRegion === region ? 'active' : ''}`}
-                                        onClick={() => handleBrainRegionSelect(region)}
-                                    >
-                                        {region}
+                        {!isLoading && <h3>Select a Brain Region for {selectedSpecies}</h3>}
+                        {isLoading ? (
+                            <div className="small-spinner"></div>
+                        ) : (
+                            <>
+                                <div className="options-grid">
+                                    {availableBrainRegions.length > 0 ? (
+                                        availableBrainRegions.map((region) => (
+                                            <button
+                                                key={`region-${region}`}
+                                                className={`option-button ${selectedBrainRegion === region ? 'active' : ''}`}
+                                                onClick={() => handleBrainRegionSelect(region)}
+                                            >
+                                                {region}
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <div className="no-options-message">
+                                            No brain regions found for {selectedSpecies}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="step-navigation">
+                                    <button className="back-button" onClick={handleBack}>
+                                        ← Back to Species
                                     </button>
-                                ))
-                            ) : (
-                                <div className="no-options-message">No brain regions found for {selectedSpecies}</div>
-                            )}
-                        </div>
-                        <div className="step-navigation">
-                            <button className="back-button" onClick={handleBack}>
-                                ← Back to Species
-                            </button>
-                        </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 );
 
             case 'cell_type':
                 return (
                     <div className="selection-step">
-                        <h3>Select a Cell Type for {selectedBrainRegion}</h3>
-                        <div className="options-grid">
-                            {availableCellTypes.length > 0 ? (
-                                availableCellTypes.map((cellType) => (
-                                    <button
-                                        key={`cell-type-${cellType}`}
-                                        className={`option-button ${selectedCellType === cellType ? 'active' : ''}`}
-                                        onClick={() => handleCellTypeSelect(cellType)}
-                                    >
-                                        {cellType}
-                                    </button>
-                                ))
-                            ) : (
-                                <div className="no-options-message">
-                                    No cell types found for {selectedSpecies} in {selectedBrainRegion}
+                        {!isLoading && <h3>Select a Cell Type for {selectedBrainRegion}</h3>}
+                        {isLoading ? (
+                            <div className="small-spinner"></div>
+                        ) : (
+                            <>
+                                <div className="options-grid">
+                                    {availableCellTypes.length > 0 ? (
+                                        availableCellTypes.map((cellType) => (
+                                            <button
+                                                key={`cell-type-${cellType}`}
+                                                className={`option-button ${selectedCellType === cellType ? 'active' : ''}`}
+                                                onClick={() => handleCellTypeSelect(cellType)}
+                                            >
+                                                {cellType}
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <div className="no-options-message">
+                                            No cell types found for {selectedSpecies} in {selectedBrainRegion}
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                        <div className="step-navigation">
-                            <button className="back-button" onClick={handleBack}>
-                                ← Back to Brain Region
-                            </button>
-                        </div>
+                                <div className="step-navigation">
+                                    <button className="back-button" onClick={handleBack}>
+                                        ← Back to Brain Region
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 );
 
             case 'neuron':
                 return (
                     <div className="selection-step">
-                        <h3>Select a Neuron</h3>
-                        <div className="neuron-list">
-                            {availableNeurons.length > 0 ? (
-                                availableNeurons.map((neuron) => (
-                                    <NeuronButton
-                                        key={`neuron-${neuron.neuron_id}`}
-                                        neuron={neuron}
-                                        onClick={loadNeuronData}
-                                        isSelected={selectedNeuronId === neuron.neuron_id}
-                                        isLoading={selectedNeuronId === neuron.neuron_id && isLoadingSWC}
-                                        detailsLink={getDetailsLink(neuron.neuron_name)}
-                                    />
-                                ))
-                            ) : (
-                                <div className="no-options-message">
-                                    No neurons found matching all selected criteria
+                        {!isLoading && <h3>Select a Neuron</h3>}
+                        {isLoading ? (
+                            <div className="small-spinner"></div>
+                        ) : (
+                            <>
+                                <div className="neuron-list">
+                                    {availableNeurons.length > 0 ? (
+                                        availableNeurons.map((neuron) => (
+                                            <NeuronButton
+                                                key={`neuron-${neuron.neuron_id}`}
+                                                neuron={neuron}
+                                                onClick={loadNeuronData}
+                                                isSelected={selectedNeuronId === neuron.neuron_id}
+                                                isLoading={selectedNeuronId === neuron.neuron_id && isLoadingSWC}
+                                                detailsLink={getDetailsLink(neuron.neuron_name)}
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className="no-options-message">
+                                            No neurons found matching all selected criteria
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                        <div className="step-navigation">
-                            <button className="back-button" onClick={handleBack}>
-                                ← Back to Cell Type
-                            </button>
-                        </div>
+                                <div className="step-navigation">
+                                    <button className="back-button" onClick={handleBack}>
+                                        ← Back to Cell Type
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 );
         }
@@ -493,8 +518,6 @@ const SearchByFeatures: React.FC<SearchByFeaturesProps> = ({ selectedNeuronId, o
             </div>
 
             {error && <div className="error-message">{error}</div>}
-
-            {isLoading && <div className="loading-indicator">Loading options...</div>}
 
             {renderStep()}
         </div>
