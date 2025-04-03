@@ -2,21 +2,36 @@
 
 [![Online Editor](https://github.com/deangeckt/swc_editor/actions/workflows/pages/pages-build-deployment/badge.svg)](https://deangeckt.github.io/swc_editor/)
 
-This is a free and simple [**online editor**](https://deangeckt.github.io/swc_editor/) for morphological neuron SWC files.
+A free, browser-based [**online tool**](https://deangeckt.github.io/swc_editor/) for visualizing and editing morphological neuron `.swc` files — no installation required.
 
-It includes: visualize, edit, import and export SWC files in 2D and 3D, and export a transparent PNG image.
-The exported files can later be used in simulation software such as [Neuron](https://www.neuron.yale.edu/neuron/).
+## Features
 
-Morphological files can be found at: https://neuromorpho.org/.
+- View, edit, import, and export `.swc` files in both **2D** and **3D**
+- Export transparent **PNG** images for figures or presentations
+- Edited `.swc` files can be used directly in simulation tools like [**NEURON**](https://www.neuron.yale.edu/neuron/) 
+- Search and load neurons directly from [NeuroMorpho.Org](https://neuromorpho.org/) using their public API
 
-## Demo
+🎬 **See demo below ↓**
 
+
+
+## Demos
+
+#### Browse for online neurons available at [NeuroMorpho.Org](https://neuromorpho.org/)
+
+https://github.com/user-attachments/assets/fbde380e-cc2e-4c61-91e1-3276277f3979
+
+#### Remove a specific branch in tree via the 2D editor, save for later analysis
+
+https://github.com/user-attachments/assets/4985c768-71b2-4c51-9297-23d91ad5c168
+
+#### Upload your own neuron and change segments color
 
 https://github.com/user-attachments/assets/30049385-c528-46bb-af4b-6a7990700c2b
 
 
 
-### Working with skeletons:
+## MICrONS skeletons example:
 To use a skeleton from [MICrONS](https://www.microns-explorer.org/cortical-mm3), which can be loaded via [skeleton_plot](https://github.com/AllenInstitute/skeleton_plot/tree/main) or [Meshparty](https://github.com/CAVEconnectome/MeshParty) run:
 
 Loading the skeleton:
