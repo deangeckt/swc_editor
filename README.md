@@ -8,7 +8,7 @@ A free, browser-based [**online tool**](https://deangeckt.github.io/swc_editor/)
 
 - View, edit, import, and export `.swc` files in both **2D** and **3D**
 - Export transparent **PNG** images for figures or presentations
-- Edited `.swc` files can be used directly in simulation tools like [**NEURON**](https://www.neuron.yale.edu/neuron/) 
+- Edited `.swc` files can be used in simulation tools like [**NEURON**](https://www.neuron.yale.edu/neuron/) and [**BRIAN**](https://briansimulator.org/)
 - Search and load neurons directly from [NeuroMorpho.Org](https://neuromorpho.org/) using their public API
 
 🎬 **See demo below ↓**
@@ -21,7 +21,7 @@ A free, browser-based [**online tool**](https://deangeckt.github.io/swc_editor/)
 
 https://github.com/user-attachments/assets/fbde380e-cc2e-4c61-91e1-3276277f3979
 
-#### Remove a specific branch in tree via the 2D editor, save for later analysis
+#### Remove a specific branch in the tree via the 2D editor, save for later analysis
 
 https://github.com/user-attachments/assets/4985c768-71b2-4c51-9297-23d91ad5c168
 
