@@ -12,6 +12,8 @@ const getSpeciesIcon = (species: string) => {
             return '🐭';
         case 'human':
             return '👨‍👩';
+        case 'abstract':
+            return '🌿';
         default:
             return '🧬';
     }

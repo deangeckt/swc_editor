@@ -58,6 +58,30 @@ export const neuron_files: NeuronFile[] = [
         species: 'Human',
         link: 'https://neuromorpho.org/neuron_info.jsp?neuron_name=758319694_transformed',
     },
+    {
+        file_path: 'Synthetic_8B0L_set_electric_05a.swc',
+        neuron_name: 'First-order Rall Tree',
+        cell_type: 'Synthetic',
+        brain_region: 'Synthetic',
+        species: 'Abstract',
+        link: 'http://www.scholarpedia.org/article/Rall_model',
+    },
+    {
+        file_path: 'Synthetic_8B1L_set_electric_07a.swc',
+        neuron_name: 'Second-order Rall Tree',
+        cell_type: 'Synthetic',
+        brain_region: 'Synthetic',
+        species: 'Abstract',
+        link: 'http://www.scholarpedia.org/article/Rall_model',
+    },
+    {
+        file_path: 'Synthetic_8B2L_set_electric_05a.swc',
+        neuron_name: 'Third-order Rall Tree',
+        cell_type: 'Synthetic',
+        brain_region: 'Synthetic',
+        species: 'Abstract',
+        link: 'http://www.scholarpedia.org/article/Rall_model',
+    },
 ];
 
 // Helper function to group neurons by species
